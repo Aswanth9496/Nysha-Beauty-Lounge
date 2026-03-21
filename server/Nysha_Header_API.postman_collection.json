@@ -1,0 +1,182 @@
+{
+  "info": {
+    "name": "Nysha Header API",
+    "description": "Collection for testing Nysha Header endpoints. Assumes JWT auth is managed for POST, PATCH, and DELETE.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Add Header Config",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "sub_title",
+              "value": "Welcome to Nysha Beauty Lounge",
+              "type": "text"
+            },
+            {
+              "key": "phone_number",
+              "value": "+971 4 XXX XXXX",
+              "type": "text"
+            },
+            {
+              "key": "banner_text",
+              "value": "Book your ultimate spa experience today!",
+              "type": "text"
+            },
+            {
+              "key": "isActive",
+              "value": "true",
+              "type": "text"
+            },
+            {
+              "key": "logo",
+              "type": "file",
+              "src": [],
+              "description": "Select exactly 1 image here"
+            },
+            {
+              "key": "banner_images",
+              "type": "file",
+              "src": [],
+              "description": "Select up to 2 images here"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/header",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "header"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Headers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/header",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "header"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Single Header",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/header/:id",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "header",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "REPLACE_WITH_HEADER_ID"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edit Header Config",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "sub_title",
+              "value": "Updated Welcome Message",
+              "type": "text"
+            },
+            {
+              "key": "logo",
+              "type": "file",
+              "src": []
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/header/:id",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "header",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "REPLACE_WITH_HEADER_ID"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Header Config",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/header/:id",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "header",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "REPLACE_WITH_HEADER_ID"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
