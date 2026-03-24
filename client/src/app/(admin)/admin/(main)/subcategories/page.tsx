@@ -37,6 +37,9 @@ export default function SubCategoriesPage() {
     const [error, setError] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+    // Filter state
+    const [filterCategoryId, setFilterCategoryId] = useState<string>('all');
+
     // Form states
     const [name, setName] = useState('');
     const [categoryId, setCategoryId] = useState('');
@@ -201,6 +204,14 @@ export default function SubCategoriesPage() {
         return found ? found.name : 'Unknown';
     };
 
+    // Filtering logic
+    const filteredSubCategories = filterCategoryId === 'all'
+        ? subCategories
+        : subCategories.filter(sub => {
+            const catId = typeof sub.categoryId === 'object' ? sub.categoryId._id : sub.categoryId;
+            return catId === filterCategoryId;
+        });
+
     return (
         <div className="space-y-6 lg:space-y-8">
             <AdminPageHeader
@@ -220,16 +231,49 @@ export default function SubCategoriesPage() {
             )}
 
             <AdminCard>
+                <div className="mb-6 flex flex-wrap items-center gap-6 border-b border-salon-border/30 pb-6 px-1">
+                    <div className="space-y-1.5 flex-1 min-w-[240px] max-w-sm relative group">
+                        <label className="text-[8px] uppercase tracking-[3px] text-salon-gray font-bold ml-1 flex items-center gap-2">
+                             Parent Category Filter
+                            <span className="w-1.5 h-1.5 rounded-full bg-gold/40" />
+                        </label>
+                        <select
+                            value={filterCategoryId}
+                            onChange={(e) => setFilterCategoryId(e.target.value)}
+                            className="w-full bg-salon-bg/20 border border-salon-border/50 px-4 py-3 text-white font-dm-sans text-[10px] tracking-[2px] uppercase outline-none focus:border-gold/50 transition-all appearance-none cursor-pointer hover:bg-white/5"
+                        >
+                            <option value="all" className="bg-salon-bg2">All Categories (Global)</option>
+                            {categories.map(cat => (
+                                <option key={cat._id} value={cat._id} className="bg-salon-bg2">{cat.name}</option>
+                            ))}
+                        </select>
+                        <div className="absolute right-4 bottom-3.5 pointer-events-none opacity-40 group-hover:opacity-70 transition-opacity">
+                            <svg className="w-3 h-3 fill-gold" viewBox="0 0 20 20">
+                                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    {filterCategoryId !== 'all' && (
+                        <button 
+                            onClick={() => setFilterCategoryId('all')}
+                            className="mt-5 text-[8px] uppercase tracking-[2px] text-gold/60 hover:text-gold transition-colors underline underline-offset-4 decoration-gold/20"
+                        >
+                            Reset Filter
+                        </button>
+                    )}
+                </div>
+
                 {loading ? (
                     <div className="py-20 text-center">
-                        <div className="inline-block w-8 h-8 border-2 border-gold/20 border-t-gold animate-spin mb-4" />
+                        <div className="inline-block w-8 h-8 border-2 border-gold/10 border-t-gold animate-spin mb-4" />
                         <p className="text-[10px] uppercase tracking-[3px] text-salon-gray italic">Loading refined categories...</p>
                     </div>
                 ) : (
                     <>
                         <div className="hidden md:block">
                             <AdminTable headers={['Sub-Category', 'Parent Category', 'Cover Photo', 'Status', 'Actions']}>
-                                {subCategories.map((sub) => (
+                                {filteredSubCategories.map((sub) => (
                                     <tr key={sub._id} className="group hover:bg-white/5 transition-colors text-[10px] sm:text-[11px]">
                                         <td className="px-4 py-3 sm:px-5 sm:py-4 font-bold text-white tracking-widest uppercase min-w-[150px]">
                                             {sub.name}
@@ -269,7 +313,7 @@ export default function SubCategoriesPage() {
 
                         {/* Mobile View */}
                         <div className="md:hidden divide-y divide-salon-border/30">
-                            {subCategories.map((sub) => (
+                            {filteredSubCategories.map((sub) => (
                                 <div key={sub._id} className="p-4 space-y-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 border border-gold/10 overflow-hidden bg-salon-bg2 flex shrink-0 items-center justify-center">
@@ -319,9 +363,9 @@ export default function SubCategoriesPage() {
                             ))}
                         </div>
 
-                        {subCategories.length === 0 && (
+                        {filteredSubCategories.length === 0 && (
                             <div className="py-20 text-center text-salon-gray italic text-[10px] tracking-widest uppercase opacity-40">
-                                No sub-categories found. Refine your catalog by adding one.
+                                {filterCategoryId !== 'all' ? 'No sub-categories found for this parent.' : 'No sub-categories found. Refine your catalog by adding one.'}
                             </div>
                         )}
                     </>
@@ -346,7 +390,7 @@ export default function SubCategoriesPage() {
                             required
                             value={categoryId}
                             onChange={(e) => setCategoryId(e.target.value)}
-                            className="w-full bg-salon-bg2 border border-salon-border px-4 py-3 text-white font-dm-sans text-[11px] tracking-widest uppercase outline-none focus:border-gold transition-all appearance-none"
+                            className="w-full bg-salon-bg2 border border-salon-border px-4 py-3 text-white font-dm-sans text-[11px] tracking-widest uppercase outline-none focus:border-gold transition-all appearance-none cursor-pointer"
                         >
                             <option value="" disabled className="bg-salon-bg2">Select Category</option>
                             {categories.map(cat => (
@@ -508,6 +552,7 @@ export default function SubCategoriesPage() {
                                 className="text-[9px] tracking-[4px] text-gold uppercase hover:underline decoration-gold/30 underline-offset-8"
                             >
                                 Edit Sub-Category &rarr;
+                              
                             </button>
                         </div>
                     </div>
