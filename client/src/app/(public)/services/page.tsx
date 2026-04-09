@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface Category {
     _id: string;
@@ -70,8 +71,8 @@ function ServicesContent() {
             try {
                 setLoading(true);
                 const [catRes, subRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/categories'),
-                    fetch('http://localhost:5000/api/subcategories')
+                    fetch(`${API_BASE_URL}/api/categories`),
+                    fetch(`${API_BASE_URL}/api/subcategories`)
                 ]);
                 
                 const catData = await catRes.json();
@@ -102,7 +103,7 @@ function ServicesContent() {
         setModalServices([]);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/services?subCategoryId=${subId}&is_visible=true`);
+            const res = await fetch(`${API_BASE_URL}/api/services?subCategoryId=${subId}&is_visible=true`);
             const result = await res.json();
             if (result.success) {
                 // Sort by sort_order if available, or title
@@ -129,7 +130,7 @@ function ServicesContent() {
             {/* Dynamic Hero */}
             <section className="relative w-full h-[40vh] sm:h-[45vh] flex items-center justify-center bg-salon-bg2 overflow-hidden border-b border-white/5">
                 <img
-                    src={activeCategory?.photo ? `http://localhost:5000${activeCategory.photo}` : "/saloon/assets/images/salon_interior.png"}
+                    src={activeCategory?.photo ? `${API_BASE_URL}${activeCategory.photo}` : "/saloon/assets/images/salon_interior.png"}
                     alt={activeCategory?.name || "Our Services"}
                     className="absolute inset-0 w-full h-full object-cover brightness-[0.4] animate-[slowZoom_20s_ease_infinite_alternate]"
                 />
@@ -192,7 +193,7 @@ function ServicesContent() {
                             >
                                 <div className="aspect-[16/10] sm:aspect-[4/3] overflow-hidden relative">
                                     <img 
-                                        src={sub.cover_image ? `http://localhost:5000${sub.cover_image}` : "/saloon/assets/images/salon_interior.png"} 
+                                        src={sub.cover_image ? `${API_BASE_URL}${sub.cover_image}` : "/saloon/assets/images/salon_interior.png"} 
                                         alt={sub.name}
                                         className="w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-110"
                                     />

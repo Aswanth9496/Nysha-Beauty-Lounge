@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface Category {
     _id: string;
@@ -15,7 +16,7 @@ export default function LashNailHero() {
     useEffect(() => {
         const fetchCategory = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/categories');
+                const res = await fetch(`${API_BASE_URL}/api/categories`);
                 const result = await res.json();
                 if (result.success && result.data && result.data.length > 0) {
                     const found = result.data.find((c: any) => c.name.toLowerCase().includes('lash') || c.name.toLowerCase().includes('nail'));
@@ -28,7 +29,7 @@ export default function LashNailHero() {
         fetchCategory();
     }, []);
 
-    const heroImg = category?.photo ? `http://localhost:5000${category.photo}` : "/saloon/assets/images/nail-1.png";
+    const heroImg = category?.photo ? `${API_BASE_URL}${category.photo}` : "/saloon/assets/images/nail-1.png";
 
     return (
         <section className="relative w-full h-[35vh] flex items-center justify-center bg-salon-bg2 overflow-hidden">

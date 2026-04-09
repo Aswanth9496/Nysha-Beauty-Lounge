@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface HeaderContent {
     _id: string;
@@ -62,7 +63,7 @@ export default function CMSPage() {
     const fetchCMSData = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:5000/api/header', {
+            const response = await fetch(`${API_BASE_URL}/api/header`, {
                 credentials: 'include'
             });
             const result = await response.json();
@@ -79,9 +80,9 @@ export default function CMSPage() {
                 setBannerText(data.banner_text || '');
                 setIsActive(data.isActive);
 
-                if (data.logo) setLogoPreview(`http://localhost:5000${data.logo}`);
-                if (data.shop_image_1) setShopImage1Preview(`http://localhost:5000${data.shop_image_1}`);
-                if (data.shop_image_2) setShopImage2Preview(`http://localhost:5000${data.shop_image_2}`);
+                if (data.logo) setLogoPreview(`${API_BASE_URL}${data.logo}`);
+                if (data.shop_image_1) setShopImage1Preview(`${API_BASE_URL}${data.shop_image_1}`);
+                if (data.shop_image_2) setShopImage2Preview(`${API_BASE_URL}${data.shop_image_2}`);
 
                 if (data.banner_images) {
                     setBannerItems(data.banner_images.map((img: string, idx: number) => ({
@@ -196,8 +197,8 @@ export default function CMSPage() {
             if (bannerItems.length === 0) formData.append('banner_images', '');
 
             const url = header
-                ? `http://localhost:5000/api/header/${header._id}`
-                : 'http://localhost:5000/api/header';
+                ? `${API_BASE_URL}/api/header/${header._id}`
+                : `${API_BASE_URL}/api/header`;
 
             const method = header ? 'PATCH' : 'POST';
 
@@ -216,9 +217,9 @@ export default function CMSPage() {
                 setShopImage1File(null);
                 setShopImage2File(null);
 
-                if (updatedData.logo) setLogoPreview(`http://localhost:5000${updatedData.logo}`);
-                if (updatedData.shop_image_1) setShopImage1Preview(`http://localhost:5000${updatedData.shop_image_1}`);
-                if (updatedData.shop_image_2) setShopImage2Preview(`http://localhost:5000${updatedData.shop_image_2}`);
+                if (updatedData.logo) setLogoPreview(`${API_BASE_URL}${updatedData.logo}`);
+                if (updatedData.shop_image_1) setShopImage1Preview(`${API_BASE_URL}${updatedData.shop_image_1}`);
+                if (updatedData.shop_image_2) setShopImage2Preview(`${API_BASE_URL}${updatedData.shop_image_2}`);
 
                 if (updatedData.banner_images) {
                     setBannerItems(updatedData.banner_images.map((img: string, idx: number) => ({
@@ -438,7 +439,7 @@ export default function CMSPage() {
                                 <div className="grid grid-cols-2 gap-2">
                                     {bannerItems.map(item => (
                                         <div key={item.id} className="aspect-square border border-gold/10 bg-salon-bg2 relative overflow-hidden group">
-                                            <img src={item.type === 'existing' ? `http://localhost:5000${item.url}` : item.url} className="w-full h-full object-cover" alt="Banner" />
+                                            <img src={item.type === 'existing' ? `${API_BASE_URL}${item.url}` : item.url} className="w-full h-full object-cover" alt="Banner" />
                                             <button type="button" onClick={() => removeBannerItem(item.id)} className="absolute top-1 right-1 w-4 h-4 bg-rose-600 text-white text-[8px] flex items-center justify-center">✕</button>
                                         </div>
                                     ))}

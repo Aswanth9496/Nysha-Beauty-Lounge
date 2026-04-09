@@ -6,6 +6,7 @@ import AdminTable from '@/components/admin/AdminTable';
 import AdminBadge from '@/components/admin/AdminBadge';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminModal from '@/components/admin/AdminModal';
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface Category {
     _id: string;
@@ -38,7 +39,7 @@ export default function CategoriesPage() {
     const fetchCategories = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:5000/api/categories', {
+            const response = await fetch(`${API_BASE_URL}/api/categories`, {
                 credentials: 'include'
             });
             const result = await response.json();
@@ -97,7 +98,7 @@ export default function CategoriesPage() {
         if (!selectedCategory) return;
         setSubmitting(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/categories/${selectedCategory._id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/categories/${selectedCategory._id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -131,8 +132,8 @@ export default function CategoriesPage() {
             }
 
             const url = isEditMode && selectedCategory 
-                ? `http://localhost:5000/api/categories/${selectedCategory._id}` 
-                : 'http://localhost:5000/api/categories';
+                ? `${API_BASE_URL}/api/categories/${selectedCategory._id}` 
+                : `${API_BASE_URL}/api/categories`;
             
             const method = isEditMode ? 'PATCH' : 'POST';
 
@@ -197,7 +198,7 @@ export default function CategoriesPage() {
                                             <div className="w-10 h-10 border border-gold/10 overflow-hidden bg-salon-bg2 flex items-center justify-center">
                                                 {category.photo ? (
                                                     <img 
-                                                        src={`http://localhost:5000${category.photo}`} 
+                                                        src={`${API_BASE_URL}${category.photo}`} 
                                                         alt={category.name} 
                                                         className="w-full h-full object-cover transition-all duration-500"
                                                     />
@@ -236,7 +237,7 @@ export default function CategoriesPage() {
                                         <div className="w-12 h-12 border border-gold/10 overflow-hidden bg-salon-bg2 flex shrink-0 items-center justify-center">
                                             {category.photo ? (
                                                 <img 
-                                                    src={`http://localhost:5000${category.photo}`} 
+                                                    src={`${API_BASE_URL}${category.photo}`} 
                                                     alt={category.name} 
                                                     className="w-full h-full object-cover"
                                                 />
@@ -395,7 +396,7 @@ export default function CategoriesPage() {
                             <div className="w-full h-64 bg-salon-bg2 border-b border-salon-border flex items-center justify-center overflow-hidden p-3">
                                 {selectedCategory.photo ? (
                                     <img 
-                                        src={`http://localhost:5000${selectedCategory.photo}`} 
+                                        src={`${API_BASE_URL}${selectedCategory.photo}`} 
                                         alt={selectedCategory.name} 
                                         className="max-w-full max-h-full object-contain pointer-events-none"
                                     />

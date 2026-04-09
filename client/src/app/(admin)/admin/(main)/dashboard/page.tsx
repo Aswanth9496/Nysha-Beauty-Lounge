@@ -6,6 +6,7 @@ import AdminCard from "@/components/admin/AdminCard";
 import AdminTable from "@/components/admin/AdminTable";
 import AdminBadge from "@/components/admin/AdminBadge";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface Stats {
     categories: number;
@@ -33,9 +34,9 @@ export default function DashboardPage() {
             try {
                 setLoading(true);
                 const [catRes, subRes, serRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/categories'),
-                    fetch('http://localhost:5000/api/subcategories'),
-                    fetch('http://localhost:5000/api/services')
+                    fetch(`${API_BASE_URL}/api/categories`),
+                    fetch(`${API_BASE_URL}/api/subcategories`),
+                    fetch(`${API_BASE_URL}/api/services`)
                 ]);
 
                 const categories = await catRes.json();

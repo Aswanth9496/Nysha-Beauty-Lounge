@@ -6,6 +6,7 @@ import AdminTable from '@/components/admin/AdminTable';
 import AdminBadge from '@/components/admin/AdminBadge';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminModal from '@/components/admin/AdminModal';
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface Category {
     _id: string;
@@ -78,7 +79,7 @@ export default function ServicesPage() {
     const fetchServices = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:5000/api/services', { credentials: 'include' });
+            const response = await fetch(`${API_BASE_URL}/api/services`, { credentials: 'include' });
             const result = await response.json();
             if (result.success) setServices(result.data);
         } catch (err) {
@@ -91,8 +92,8 @@ export default function ServicesPage() {
     const fetchDropdowns = async () => {
         try {
             const [catRes, subRes] = await Promise.all([
-                fetch('http://localhost:5000/api/categories', { credentials: 'include' }),
-                fetch('http://localhost:5000/api/subcategories', { credentials: 'include' })
+                fetch(`${API_BASE_URL}/api/categories`, { credentials: 'include' }),
+                fetch(`${API_BASE_URL}/api/subcategories`, { credentials: 'include' })
             ]);
             const catResult = await catRes.json();
             const subResult = await subRes.json();
@@ -173,7 +174,7 @@ export default function ServicesPage() {
         if (!selectedService) return;
         setSubmitting(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/services/${selectedService._id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/services/${selectedService._id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -230,8 +231,8 @@ export default function ServicesPage() {
             }
 
             const url = isEditMode && selectedService 
-                ? `http://localhost:5000/api/services/${selectedService._id}` 
-                : 'http://localhost:5000/api/services';
+                ? `${API_BASE_URL}/api/services/${selectedService._id}` 
+                : `${API_BASE_URL}/api/services`;
             
             const method = isEditMode ? 'PATCH' : 'POST';
 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface SubCategory {
     _id: string;
@@ -19,7 +20,7 @@ export default function MakeupWellnessServiceList() {
         const fetchSubCategories = async () => {
             try {
                 setLoading(true);
-                const res = await fetch('http://localhost:5000/api/subcategories');
+                const res = await fetch(`${API_BASE_URL}/api/subcategories`);
                 const result = await res.json();
                 if (result.success && result.data) {
                     // Filter for "Makeup & Wellness" (ID: 69bde159dee73b0def25d6a8)
@@ -42,7 +43,7 @@ export default function MakeupWellnessServiceList() {
         id: `0${i + 1}`.slice(-2),
         name: sub.name,
         description: sub.description,
-        image: sub.cover_image ? `http://localhost:5000${sub.cover_image}` : "/saloon/assets/images/make up & wellness/bridal_makeup.png",
+        image: sub.cover_image ? `${API_BASE_URL}${sub.cover_image}` : "/saloon/assets/images/make up & wellness/bridal_makeup.png",
         category: "Glam"
     }));
 

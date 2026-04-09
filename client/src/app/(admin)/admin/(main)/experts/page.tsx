@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminBadge from '@/components/admin/AdminBadge';
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface Expert {
     _id: string;
@@ -32,7 +33,7 @@ export default function ExpertsPage() {
     const fetchExperts = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:5000/api/experts');
+            const res = await fetch(`${API_BASE_URL}/api/experts`);
             const data = await res.json();
             if (data.success) {
                 setExperts(data.data);
@@ -101,8 +102,8 @@ export default function ExpertsPage() {
 
         try {
             const url = isEditing && currentExpertId
-                ? `http://localhost:5000/api/experts/${currentExpertId}`
-                : 'http://localhost:5000/api/experts';
+                ? `${API_BASE_URL}/api/experts/${currentExpertId}`
+                : `${API_BASE_URL}/api/experts`;
             
             const method = isEditing ? 'PATCH' : 'POST';
 
@@ -131,7 +132,7 @@ export default function ExpertsPage() {
         if (!confirm('Are you sure you want to remove this expert?')) return;
         
         try {
-            const res = await fetch(`http://localhost:5000/api/experts/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/experts/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -167,7 +168,7 @@ export default function ExpertsPage() {
                             <div className="flex flex-col items-center text-center space-y-4">
                                 <div className="w-16 h-16 border border-gold/20 p-1 bg-gold/5 flex items-center justify-center text-2xl italic font-playfair shadow-xl relative overflow-hidden">
                                     {expert.image ? (
-                                        <img className="w-full h-full object-cover" src={expert.image.startsWith('http') ? expert.image : `http://localhost:5000${expert.image}`} alt={expert.role} />
+                                        <img className="w-full h-full object-cover" src={expert.image.startsWith('http') ? expert.image : `${API_BASE_URL}${expert.image}`} alt={expert.role} />
                                     ) : (
                                         <span className="text-gold/40">{expert.role.charAt(0)}</span>
                                     )}

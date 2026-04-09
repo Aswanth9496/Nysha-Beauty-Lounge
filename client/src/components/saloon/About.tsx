@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface HeaderContent {
     shop_image_1?: string;
@@ -16,7 +17,7 @@ export default function About() {
     useEffect(() => {
         const fetchCMS = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/header');
+                const res = await fetch(`${API_BASE_URL}/api/header`);
                 const result = await res.json();
                 if (result.success && result.data && result.data.length > 0) {
                     setHeader(result.data[0]);
@@ -29,11 +30,11 @@ export default function About() {
     }, []);
 
     const img1 = header?.shop_image_1 
-        ? `http://localhost:5000${header.shop_image_1}` 
+        ? `${API_BASE_URL}${header.shop_image_1}` 
         : "/saloon/assets/images/salon_interior.png";
         
     const img2 = header?.shop_image_2 
-        ? `http://localhost:5000${header.shop_image_2}` 
+        ? `${API_BASE_URL}${header.shop_image_2}` 
         : "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&q=80&w=500&h=667";
 
     return (

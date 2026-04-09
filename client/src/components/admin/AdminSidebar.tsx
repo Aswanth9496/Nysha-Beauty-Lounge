@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from "@/lib/api/config";
 
 interface AdminSidebarProps {
     isOpen: boolean;
@@ -16,7 +17,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
-            await fetch('http://localhost:5000/api/auth/logout', {
+            await fetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
