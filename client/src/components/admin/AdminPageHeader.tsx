@@ -10,9 +10,10 @@ interface AdminPageHeaderProps {
         onClick: () => void;
     };
     showSearch?: boolean;
+    onSearch?: (value: string) => void;
 }
 
-const AdminPageHeader: React.FC<AdminPageHeaderProps> = ({ title, subtitle, action, showSearch }) => {
+const AdminPageHeader: React.FC<AdminPageHeaderProps> = ({ title, subtitle, action, showSearch, onSearch }) => {
     return (
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 relative">
             <div className="relative z-10 space-y-2">
@@ -35,6 +36,7 @@ const AdminPageHeader: React.FC<AdminPageHeaderProps> = ({ title, subtitle, acti
                         <input
                             type="text"
                             placeholder="Search..."
+                            onChange={(e) => onSearch?.(e.target.value)}
                             className="w-full bg-salon-bg2/50 border border-salon-border px-4 py-2.5 text-salon-white font-dm-sans text-[9px] tracking-[2px] uppercase outline-none focus:border-gold transition-colors placeholder:text-salon-gray/40"
                         />
                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-salon-gray text-xs">🔍</span>

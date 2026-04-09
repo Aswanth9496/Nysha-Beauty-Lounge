@@ -8,6 +8,8 @@ interface HeaderContent {
     shop_image_2?: string;
 }
 
+
+
 export default function About() {
     const [header, setHeader] = useState<HeaderContent | null>(null);
 
