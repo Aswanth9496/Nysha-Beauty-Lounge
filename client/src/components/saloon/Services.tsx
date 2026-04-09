@@ -144,7 +144,7 @@ export default function Services() {
                                     </p>
                                 </div>
                                 <div className="mt-6">
-                                    <div className="group/btn relative overflow-hidden font-dm-sans text-[9px] font-light tracking-[2.5px] uppercase py-[10px] px-[26px] border border-gold text-gold bg-transparent transition-colors duration-[0.35s] inline-block">
+                                    <div className="group/btn relative overflow-hidden font-dm-sans text-[9px] font-light tracking-[2.5px] uppercase py-[10px] px-[26px] border border-gold text-gold bg-transparent transition-colors duration-[0.35s] group-hover:text-black group-hover/btn:text-black inline-block">
                                         <span className="relative z-10 font-medium">Book Now</span>
                                         <div className="absolute inset-0 bg-gold -translate-x-[101%] transition-transform duration-[0.38s] cubic-bezier-[0.77,0,0.18,1] group-hover/btn:translate-x-0 group-hover:translate-x-0" />
                                     </div>

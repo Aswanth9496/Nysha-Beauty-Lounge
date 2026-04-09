@@ -1,7 +1,5 @@
+import { apiFetch } from "../apiClient";
+
 export async function getServices() {
-    const res = await fetch("/api/admin/services");
-    if (!res.ok) {
-        throw new Error("Failed to fetch services");
-    }
-    return res.json();
+    return apiFetch("/api/admin/services");
 }
