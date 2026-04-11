@@ -1,38 +1,51 @@
 require('dotenv').config();
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
-const upload = require('./middlewares/upload');
+const errorHandler = require('./middlewares/errorMiddleware');
+
+// Routes imports
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const subCategoryRoutes = require('./routes/subCategoryRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const headerRoutes = require('./routes/headerRoutes');
 const expertRoutes = require('./routes/expertRoutes');
+const galleryRoutes = require('./routes/galleryRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Connect Database
-connectDB().then(() => {
-  const seedAdmin = require('./utils/seedAdmin');
-  seedAdmin();
-});
+connectDB();
 
-// Middleware
+// Security Middleware
+app.use(helmet()); // Set security HTTP headers
+app.use(hpp()); // Prevent HTTP Parameter Pollution
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again after 15 minutes'
+});
+app.use('/api', limiter);
+
+// Standard Middleware
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Serve static files (e.g., uploaded files)
+// Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
@@ -42,20 +55,16 @@ app.use('/api/subcategories', subCategoryRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/header', headerRoutes);
 app.use('/api/experts', expertRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-// Example route for upload using the external multer middleware
-app.post('/upload', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send({ message: 'No file uploaded' });
-  }
-  res.send({ message: 'File uploaded successfully', file: req.file });
-});
+// Centralized Error Handler
+app.use(errorHandler);
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
 });
