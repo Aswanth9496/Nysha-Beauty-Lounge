@@ -1,7 +1,7 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const hpp = require('hpp');
@@ -25,7 +25,9 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Security Middleware
-app.use(helmet()); // Set security HTTP headers
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+})); // Set security HTTP headers
 app.use(hpp()); // Prevent HTTP Parameter Pollution
 
 // Rate Limiting

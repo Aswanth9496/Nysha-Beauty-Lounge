@@ -30,15 +30,15 @@ const loginUser = async (email, password) => {
   // Check for admin
   const admin = await Admin.findOne({ email }).select('+password');
   if (!admin) {
-    const err = new Error('Admin not found');
-    err.statusCode = 404;
+    const err = new Error('Invalid email or password');
+    err.statusCode = 401;
     throw err;
   }
 
   // Check if password matches
   const isMatch = await admin.matchPassword(password);
   if (!isMatch) {
-    const err = new Error('Invalid password');
+    const err = new Error('Invalid email or password');
     err.statusCode = 401;
     throw err;
   }

@@ -34,28 +34,20 @@ const AdminLoginForm = () => {
                 credentials: 'include',
             });
 
-            if (response.status === 500) {
-                setError("Something went wrong. Try again later");
-                setIsLoading(false);
-                return;
-            }
-
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Set cookies for middleware (token is httpOnly from backend, but we also set a visible one)
-                document.cookie = `token=${data.token || data.admin?._id || 'authenticated'}; path=/; max-age=86400`;
-                document.cookie = `adminToken=${data.admin?._id || 'authenticated'}; path=/; max-age=86400`;
-
+                // Token is handled securely via httpOnly cookie from the backend.
                 // Redirect to dashboard
                 router.push("/admin/dashboard");
             } else {
+                // Display the specific error message from the backend (e.g., "Invalid email or password")
                 setError(data.message || "Invalid email or password");
                 setIsLoading(false);
             }
         } catch (err) {
             console.error("Login Error:", err);
-            setError("Unable to connect to server");
+            setError("Unable to connect to server. Please try again.");
             setIsLoading(false);
         }
     };

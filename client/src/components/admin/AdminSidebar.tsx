@@ -77,6 +77,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
                         { name: 'Categories', href: '/admin/categories', icon: '📂' },
                         { name: 'Sub-Categories', href: '/admin/subcategories', icon: '🗂️' },
                         { name: 'Services', href: '/admin/services', icon: '✂️' },
+                        { name: 'Gallery', href: '/admin/gallery', icon: '🖼️' },
                     ].map((item) => (
                         <Link
                             key={item.name}
