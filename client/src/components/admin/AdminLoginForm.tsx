@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from "@/lib/api/config";
 
 const AdminLoginForm = () => {
     const [email, setEmail] = useState('');
@@ -25,7 +24,7 @@ const AdminLoginForm = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

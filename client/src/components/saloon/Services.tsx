@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { API_BASE_URL } from "@/lib/api/config";
 
 interface Category {
     _id: string;
@@ -70,7 +69,7 @@ export default function Services() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch(`${API_BASE_URL}/api/categories`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`);
                 const result = await res.json();
                 if (result.success && result.data && result.data.length > 0) {
                     setCategories(result.data);
@@ -88,7 +87,7 @@ export default function Services() {
             category: mapLabel(cat.name),
             name: cat.name,
             description: cat.description,
-            image: cat.photo.startsWith('http') ? cat.photo : `${API_BASE_URL}${cat.photo}`,
+            image: cat.photo.startsWith('http') ? cat.photo : `${process.env.NEXT_PUBLIC_API_BASE_URL}${cat.photo}`,
             link: `/services?category=${slugify(cat.name)}`,
             transitionDelay: `${(idx % 4) * 0.15}s`,
         }))

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { API_BASE_URL } from "@/lib/api/config";
 
 interface SubCategory {
     _id: string;
@@ -20,7 +19,7 @@ export default function LashNailServiceList() {
         const fetchSubCategories = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`${API_BASE_URL}/api/subcategories`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories`);
                 const result = await res.json();
                 if (result.success && result.data) {
                     // Filter for "Lash, Brow & Nail Services" (ID: 69bde091dee73b0def25d6a3)
@@ -43,7 +42,7 @@ export default function LashNailServiceList() {
         id: `0${i + 1}`.slice(-2),
         name: sub.name,
         description: sub.description,
-        image: sub.cover_image ? `${API_BASE_URL}${sub.cover_image}` : "/saloon/assets/images/Lash, Brow & Nail Services/LashLamination.png",
+        image: sub.cover_image ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${sub.cover_image}` : "/saloon/assets/images/Lash, Brow & Nail Services/LashLamination.png",
         category: "Details"
     }));
 

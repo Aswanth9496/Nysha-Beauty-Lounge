@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminBadge from '@/components/admin/AdminBadge';
-import { API_BASE_URL } from "@/lib/api/config";
 
 interface GalleryItem {
     _id: string;
@@ -26,7 +25,7 @@ export default function GalleryPage() {
     const fetchGalleries = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${API_BASE_URL}/api/gallery/admin`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery/admin`, {
                 credentials: 'include'
             });
 
@@ -102,7 +101,7 @@ export default function GalleryPage() {
         });
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/gallery`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
@@ -129,7 +128,7 @@ export default function GalleryPage() {
         if (!confirm('Are you sure you want to delete this gallery item and its images?')) return;
         
         try {
-            const res = await fetch(`${API_BASE_URL}/api/gallery/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -147,7 +146,7 @@ export default function GalleryPage() {
 
     const handleToggleStatus = async (id: string) => {
         try {
-            const res = await fetch(`${API_BASE_URL}/api/gallery/${id}/status`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery/${id}/status`, {
                 method: 'PATCH',
                 credentials: 'include'
             });
@@ -187,7 +186,7 @@ export default function GalleryPage() {
                                     {item.images && item.images.length > 0 ? (
                                         <img 
                                             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
-                                            src={`${API_BASE_URL}${item.images[0]}`} 
+                                            src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.images[0]}`} 
                                             alt="Gallery" 
                                         />
                                     ) : (

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { API_BASE_URL } from "@/lib/api/config";
 
 interface Expert {
     _id: string;
@@ -19,7 +18,7 @@ export default function Experts() {
         const fetchExperts = async () => {
             try {
                 // Fetch only active experts
-                const res = await fetch(`${API_BASE_URL}/api/experts?isActive=true`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/experts?isActive=true`);
                 const data = await res.json();
                 if (data.success) {
                     setExperts(data.data);
@@ -67,7 +66,7 @@ export default function Experts() {
                             // Support external links or static uploads (node server)
                             const imageUrl = exp.image?.startsWith('http')
                                 ? exp.image
-                                : exp.image ? `${API_BASE_URL}${exp.image}` : 'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&q=80&w=400&h=533'; // Default fallback image
+                                : exp.image ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${exp.image}` : 'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&q=80&w=400&h=533'; // Default fallback image
 
                             return (
                                 <div key={`${exp._id}-${i}`} className="group relative w-[210px] flex-shrink-0 border border-white/5 overflow-hidden cursor-pointer transition-all duration-350 hover:border-gold/40 hover:-translate-y-[7px]">

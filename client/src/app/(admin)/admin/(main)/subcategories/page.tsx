@@ -6,7 +6,6 @@ import AdminTable from '@/components/admin/AdminTable';
 import AdminBadge from '@/components/admin/AdminBadge';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminModal from '@/components/admin/AdminModal';
-import { API_BASE_URL } from "@/lib/api/config";
 
 interface Category {
     _id: string;
@@ -52,7 +51,7 @@ export default function SubCategoriesPage() {
     const fetchSubCategories = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/api/subcategories`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories`, {
                 credentials: 'include'
             });
             const result = await response.json();
@@ -68,7 +67,7 @@ export default function SubCategoriesPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/categories`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`, {
                 credentials: 'include'
             });
             const result = await response.json();
@@ -129,7 +128,7 @@ export default function SubCategoriesPage() {
         if (!selectedSubCategory) return;
         setSubmitting(true);
         try {
-            const response = await fetch(`${API_BASE_URL}/api/subcategories/${selectedSubCategory._id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories/${selectedSubCategory._id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -171,8 +170,8 @@ export default function SubCategoriesPage() {
             }
 
             const url = isEditMode && selectedSubCategory 
-                ? `${API_BASE_URL}/api/subcategories/${selectedSubCategory._id}` 
-                : `${API_BASE_URL}/api/subcategories`;
+                ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories/${selectedSubCategory._id}` 
+                : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories`;
             
             const method = isEditMode ? 'PATCH' : 'POST';
 
@@ -286,7 +285,7 @@ export default function SubCategoriesPage() {
                                             <div className="w-10 h-10 border border-gold/10 overflow-hidden bg-salon-bg2 flex items-center justify-center">
                                                 {sub.cover_image ? (
                                                     <img 
-                                                        src={`${API_BASE_URL}${sub.cover_image}`} 
+                                                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${sub.cover_image}`} 
                                                         alt={sub.name} 
                                                         className="w-full h-full object-cover transition-all duration-500"
                                                     />
@@ -320,7 +319,7 @@ export default function SubCategoriesPage() {
                                         <div className="w-12 h-12 border border-gold/10 overflow-hidden bg-salon-bg2 flex shrink-0 items-center justify-center">
                                             {sub.cover_image ? (
                                                 <img 
-                                                    src={`${API_BASE_URL}${sub.cover_image}`} 
+                                                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${sub.cover_image}`} 
                                                     alt={sub.name} 
                                                     className="w-full h-full object-cover"
                                                 />
@@ -505,7 +504,7 @@ export default function SubCategoriesPage() {
                             <div className="w-full h-64 bg-salon-bg2 border-b border-salon-border flex items-center justify-center overflow-hidden p-3">
                                 {selectedSubCategory.cover_image ? (
                                     <img 
-                                        src={`${API_BASE_URL}${selectedSubCategory.cover_image}`} 
+                                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${selectedSubCategory.cover_image}`} 
                                         alt={selectedSubCategory.name} 
                                         className="max-w-full max-h-full object-contain pointer-events-none"
                                     />

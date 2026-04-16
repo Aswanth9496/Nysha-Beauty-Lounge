@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminBadge from '@/components/admin/AdminBadge';
-import { API_BASE_URL } from "@/lib/api/config";
 
 interface AdminData {
     firstName: string;
@@ -33,7 +32,7 @@ export default function SettingsPage() {
     const fetchProfile = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/me`, {
                 credentials: 'include'
             });
             const result = await response.json();
@@ -70,7 +69,7 @@ export default function SettingsPage() {
         setError(null);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/updatedetails`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/updatedetails`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ firstName, lastName, email }),
@@ -100,7 +99,7 @@ export default function SettingsPage() {
         setError(null);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/updatepassword`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/updatepassword`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ currentPassword, newPassword }),

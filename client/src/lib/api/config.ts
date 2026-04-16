@@ -1,4 +1,2 @@
-// Centralized API base URL — ensuring production ALWAYS uses the correct backend domain
-export const API_BASE_URL = process.env.NODE_ENV === "production"
-  ? "https://api.tranzendsystems.com" 
-  : process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+// Centralized API base URL — strictly using the .env single source of truth
+export const process.env.NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_process.env.NEXT_PUBLIC_API_BASE_URL;

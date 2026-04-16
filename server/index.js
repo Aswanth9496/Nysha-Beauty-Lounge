@@ -38,9 +38,29 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+const allowedOrigins = [];
+
+if (process.env.FRONTEND_URL) {
+  // Can handle comma-separated URLs if needed
+  const envUrls = process.env.FRONTEND_URL.split(',').map(url => url.trim());
+  allowedOrigins.push(...envUrls);
+}
+
 // Standard Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Allow requests with no origin (like mobile apps, postman)
+    
+    // Check if the origin is in the allowed list or if it's a Vercel preview domain
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      const err = new Error(msg);
+      err.statusCode = 403; // Set to 403 Forbidden instead of default 500
+      callback(err, false);
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
@@ -70,3 +90,5 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
 });
+
+// Restart trigger for nodemon
