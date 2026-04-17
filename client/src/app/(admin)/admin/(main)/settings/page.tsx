@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import AdminBadge from '@/components/admin/AdminBadge';
 import { apiClient } from '@/lib/api/apiClient';
 
 export default function SettingsPage() {

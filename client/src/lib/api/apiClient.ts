@@ -37,15 +37,23 @@ class ApiClient {
       ? endpoint 
       : `${this.baseUrl}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
 
-    const defaultOptions: RequestInit = {
-      credentials: "include", // Always include cookies
+    // Define default headers
+    const headers: Record<string, string> = {};
+
+    // Only set application/json if not sending FormData and no custom Content-Type provided
+    const isFormData = options.body instanceof FormData;
+    if (!isFormData && !Object.keys(options.headers || {}).some(h => h.toLowerCase() === 'content-type')) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    const mergedOptions: RequestInit = {
+      credentials: "include",
+      ...options,
       headers: {
-        "Content-Type": "application/json",
+        ...headers,
         ...options.headers,
       },
     };
-
-    const mergedOptions = { ...defaultOptions, ...options };
 
     try {
       const response = await fetch(url, mergedOptions);
@@ -124,10 +132,6 @@ class ApiClient {
       ...options,
       method: "POST",
       body: body instanceof FormData ? body : JSON.stringify(body),
-      // Automatically remove Content-Type if body is FormData
-      headers: body instanceof FormData 
-        ? { ...options?.headers } 
-        : { ...options?.headers },
     });
   }
 
@@ -135,6 +139,14 @@ class ApiClient {
     return this.request<T>(endpoint, {
       ...options,
       method: "PUT",
+      body: body instanceof FormData ? body : JSON.stringify(body),
+    });
+  }
+
+  patch<T>(endpoint: string, body?: any, options?: RequestOptions) {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "PATCH",
       body: body instanceof FormData ? body : JSON.stringify(body),
     });
   }

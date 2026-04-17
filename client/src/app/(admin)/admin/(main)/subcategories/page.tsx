@@ -19,8 +19,9 @@ interface SubCategory {
     categoryId: Category | string;
     name: string;
     description: string;
-    photo?: string;
-    isActive: boolean;
+    cover_image?: string;
+    is_visible: boolean;
+    sort_order?: number;
     createdAt?: string;
 }
 

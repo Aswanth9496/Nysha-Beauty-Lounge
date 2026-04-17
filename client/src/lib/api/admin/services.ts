@@ -1,5 +1,5 @@
-import { apiFetch } from "../apiClient";
+import { apiClient } from "../apiClient";
 
 export async function getServices() {
-    return apiFetch("/api/admin/services");
+    return apiClient.get("/api/admin/services");
 }

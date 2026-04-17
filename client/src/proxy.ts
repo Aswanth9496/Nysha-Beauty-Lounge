@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const token = request.cookies.get('accessToken')?.value;
 
@@ -27,7 +27,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-// Configuration for matcher to only run middleware on admin routes
+// Configuration for matcher to only run proxy on admin routes
 export const config = {
     matcher: ['/admin/:path*'],
 };
