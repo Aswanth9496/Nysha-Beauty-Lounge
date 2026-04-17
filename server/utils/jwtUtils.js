@@ -22,8 +22,9 @@ const sendTokenResponse = (admin, statusCode, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax', // Lax is more reliable for production redirects while remaining secure
+    sameSite : process.env.NODE_ENV === 'production' ? "none" : "lax", // Lax is more reliable for production redirects while remaining secure
     path: '/',
+    domain: process.env.NODE_ENV === 'production' ? ".nyshabeautylounge.com" : undefined,
   };
 
   // Set Access Token Cookie (short-lived)
