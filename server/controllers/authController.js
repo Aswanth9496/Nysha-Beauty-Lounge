@@ -1,12 +1,18 @@
 const authService = require('../services/authService');
-const { sendTokenResponse } = require('../utils/jwtUtils');
+const { sendTokenResponse, generateAccessToken } = require('../utils/jwtUtils');
+const jwt = require('jsonwebtoken');
 
 // @desc    Register admin
 // @route   POST /api/auth/register
-// @access  Public
+// @access  Public (Protected by secret)
 exports.register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, registrationSecret } = req.body;
+
+    // Security: Check for registration secret to prevent public admin creation
+    if (registrationSecret !== process.env.REGISTRATION_SECRET) {
+      return res.status(401).json({ success: false, message: 'Invalid registration secret' });
+    }
 
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ success: false, message: 'Please provide all required fields' });
@@ -21,7 +27,6 @@ exports.register = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Admin registered successfully. Please log in.',
-      
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
@@ -35,7 +40,6 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    // Validation is now properly handled centrally inside the service.
     const admin = await authService.loginUser(email, password);
     sendTokenResponse(admin, 200, res);
   } catch (error) {
@@ -46,15 +50,53 @@ exports.login = async (req, res) => {
   }
 };
 
-// @desc    Log admin out / clear cookie
+// @desc    Refresh access token
+// @route   POST /api/auth/refresh
+// @access  Public
+exports.refresh = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ success: false, message: 'No refresh token provided' });
+    }
+
+    // Verify refresh token
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    
+    // Generate new access token
+    const accessToken = generateAccessToken(decoded.id);
+
+    // Set new access token cookie
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 15 * 60 * 1000, 
+    });
+
+    res.status(200).json({ success: true, message: 'Token refreshed' });
+  } catch (err) {
+    console.error('Refresh Token Error:', err.message);
+    return res.status(401).json({ success: false, message: 'Invalid or expired refresh token' });
+  }
+};
+
+// @desc    Log admin out / clear cookies
 // @route   POST /api/auth/logout
 // @access  Public
 exports.logout = (req, res) => {
-  res.cookie('token', '', {
-    expires: new Date(0),
+  const cookieOptions = {
     httpOnly: true,
-    path: '/'
-  });
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    expires: new Date(0),
+  };
+
+  res.cookie('accessToken', '', cookieOptions);
+  res.cookie('refreshToken', '', cookieOptions);
 
   res.status(200).json({
     success: true,

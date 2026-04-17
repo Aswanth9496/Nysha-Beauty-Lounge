@@ -3,13 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
-import AdminBadge from '@/components/admin/AdminBadge';
-
-interface AdminData {
-    firstName: string;
-    lastName: string;
-    email: string;
-}
+import { apiClient } from '@/lib/api/apiClient';
 
 export default function SettingsPage() {
     // Page state
@@ -32,18 +26,15 @@ export default function SettingsPage() {
     const fetchProfile = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/me`, {
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.get<{ success: boolean; data: any }>('/api/auth/me');
             if (result.success) {
                 setFirstName(result.data.firstName || '');
                 setLastName(result.data.lastName || '');
                 setEmail(result.data.email || '');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to fetch profile:', err);
-            setError('Could not load profile details.');
+            setError(err.message || 'Could not load profile details.');
         } finally {
             setLoading(false);
         }
@@ -69,20 +60,19 @@ export default function SettingsPage() {
         setError(null);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/updatedetails`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ firstName, lastName, email }),
-                credentials: 'include'
+            const result = await apiClient.put<{ success: boolean; message?: string }>('/api/auth/updatedetails', { 
+                firstName, 
+                lastName, 
+                email 
             });
-            const result = await response.json();
+            
             if (result.success) {
                 setSuccessMsg('Profile updated successfully');
             } else {
                 setError(result.message || 'Update failed');
             }
-        } catch (err) {
-            setError('Connection error. Please try again.');
+        } catch (err: any) {
+            setError(err.message || 'Connection error. Please try again.');
         } finally {
             setIsSavingProfile(false);
         }
@@ -99,13 +89,11 @@ export default function SettingsPage() {
         setError(null);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/updatepassword`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ currentPassword, newPassword }),
-                credentials: 'include'
+            const result = await apiClient.put<{ success: boolean; message?: string }>('/api/auth/updatepassword', { 
+                currentPassword, 
+                newPassword 
             });
-            const result = await response.json();
+            
             if (result.success) {
                 setSuccessMsg('Security settings updated');
                 setCurrentPassword('');
@@ -114,8 +102,8 @@ export default function SettingsPage() {
             } else {
                 setError(result.message || 'Security update failed');
             }
-        } catch (err) {
-            setError('Connection error.');
+        } catch (err: any) {
+            setError(err.message || 'Connection error.');
         } finally {
             setIsSavingSecurity(false);
         }

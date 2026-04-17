@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminBadge from '@/components/admin/AdminBadge';
+import { apiClient } from '@/lib/api/apiClient';
+import { config } from '@/lib/api/config';
 
 interface GalleryItem {
     _id: string;
@@ -25,21 +27,11 @@ export default function GalleryPage() {
     const fetchGalleries = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery/admin`, {
-                credentials: 'include'
-            });
-
-            if (res.status === 401) {
-                // If unauthorized, redirect to login
-                window.location.href = '/admin/login';
-                return;
+            const result = await apiClient.get<{ success: boolean; data: GalleryItem[] }>('/api/gallery/admin');
+            if (result.success) {
+                setGalleries(result.data);
             }
-
-            const data = await res.json();
-            if (data.success) {
-                setGalleries(data.data);
-            }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching gallery:', error);
         } finally {
             setLoading(false);
@@ -95,30 +87,28 @@ export default function GalleryPage() {
 
         setSubmitting(true);
 
-        const formData = new FormData();
+        const uploadData = new FormData();
         selectedFiles.forEach(file => {
-            formData.append('images', file);
+            uploadData.append('images', file);
         });
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery`, {
+            const result = await apiClient.request<{ success: boolean; message?: string }>('/api/gallery', {
                 method: 'POST',
-                body: formData,
-                credentials: 'include'
+                body: uploadData
             });
 
-            const data = await res.json();
-            if (data.success) {
+            if (result.success) {
                 setIsModalOpen(false);
                 fetchGalleries(); // Refresh
                 // Clear previews
                 previews.forEach(p => URL.revokeObjectURL(p));
             } else {
-                alert(`Error: ${data.message}`);
+                alert(`Error: ${result.message}`);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload error:', error);
-            alert('Failed to upload images');
+            alert(error.message || 'Failed to upload images');
         } finally {
             setSubmitting(false);
         }
@@ -128,35 +118,27 @@ export default function GalleryPage() {
         if (!confirm('Are you sure you want to delete this gallery item and its images?')) return;
         
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            const data = await res.json();
-            if (data.success) {
+            const result = await apiClient.delete<{ success: boolean; message?: string }>(`/api/gallery/${id}`);
+            if (result.success) {
                 setGalleries(prev => prev.filter(item => item._id !== id));
             } else {
-                alert(`Error: ${data.message}`);
+                alert(`Error: ${result.message}`);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Delete error:', error);
-            alert('Failed to delete gallery item');
+            alert(error.message || 'Failed to delete gallery item');
         }
     };
 
     const handleToggleStatus = async (id: string) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gallery/${id}/status`, {
-                method: 'PATCH',
-                credentials: 'include'
-            });
-            const data = await res.json();
-            if (data.success) {
+            const result = await apiClient.patch<{ success: boolean; data: any }>(`/api/gallery/${id}/status`);
+            if (result.success) {
                 setGalleries(prev => prev.map(item => 
-                    item._id === id ? { ...item, isActive: data.data.isActive } : item
+                    item._id === id ? { ...item, isActive: result.data.isActive } : item
                 ));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Toggle status error:', error);
         }
     };

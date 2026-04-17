@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiClient } from '@/lib/api/apiClient';
 
 const AdminLoginForm = () => {
     const [email, setEmail] = useState('');
@@ -24,38 +25,10 @@ const AdminLoginForm = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-                credentials: 'include',
+            const data = await apiClient.post<{ success: boolean; message?: string }>('/api/auth/login', { 
+                email, 
+                password 
             });
-
-            // Handle non-OK responses (like 405 Method Not Allowed or 401 Unauthorized) gracefully
-            if (!response.ok) {
-                let errorMessage = "Invalid email or password";
-                
-                try {
-                    const data = await response.json();
-                    errorMessage = data.message || errorMessage;
-                } catch (jsonErr) {
-                    // If response is not JSON (e.g., 405 HTML page), use a generic error based on status
-                    console.error("Non-JSON error response:", jsonErr);
-                    if (response.status === 405) {
-                        errorMessage = "Login endpoint misconfigured (405). Please contact support.";
-                    } else if (response.status === 404) {
-                        errorMessage = "Login service unavailable (404).";
-                    }
-                }
-                
-                setError(errorMessage);
-                setIsLoading(false);
-                return;
-            }
-
-            const data = await response.json();
 
             if (data.success) {
                 // Token is handled securely via httpOnly cookie from the backend.
@@ -65,9 +38,9 @@ const AdminLoginForm = () => {
                 setError(data.message || "Invalid email or password");
                 setIsLoading(false);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Login Error:", err);
-            setError("Unable to connect to server. Please try again.");
+            setError(err.message || "Unable to connect to server. Please try again.");
             setIsLoading(false);
         }
     };

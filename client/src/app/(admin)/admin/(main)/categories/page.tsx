@@ -6,6 +6,8 @@ import AdminTable from '@/components/admin/AdminTable';
 import AdminBadge from '@/components/admin/AdminBadge';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminModal from '@/components/admin/AdminModal';
+import { apiClient } from '@/lib/api/apiClient';
+import { config } from '@/lib/api/config';
 
 interface Category {
     _id: string;
@@ -38,14 +40,11 @@ export default function CategoriesPage() {
     const fetchCategories = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`, {
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.get<{ success: boolean; data: Category[] }>('/api/categories');
             if (result.success) {
                 setCategories(result.data);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to fetch categories:', err);
         } finally {
             setLoading(false);
@@ -97,11 +96,7 @@ export default function CategoriesPage() {
         if (!selectedCategory) return;
         setSubmitting(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories/${selectedCategory._id}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.delete<{ success: boolean; message?: string }>(`/api/categories/${selectedCategory._id}`);
             if (result.success) {
                 setSuccessMsg('Category deleted successfully');
                 setIsDeleteModalOpen(false);
@@ -109,8 +104,8 @@ export default function CategoriesPage() {
             } else {
                 setError(result.message || 'Failed to delete category');
             }
-        } catch (err) {
-            setError('Connection error. Please try again.');
+        } catch (err: any) {
+            setError(err.message || 'Connection error. Please try again.');
         } finally {
             setSubmitting(false);
         }
@@ -122,27 +117,25 @@ export default function CategoriesPage() {
         setError(null);
 
         try {
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('description', description);
-            formData.append('isActive', String(isActive));
+            const uploadData = new FormData();
+            uploadData.append('name', name);
+            uploadData.append('description', description);
+            uploadData.append('isActive', String(isActive));
             if (photo) {
-                formData.append('photo', photo);
+                uploadData.append('photo', photo);
             }
 
             const url = isEditMode && selectedCategory 
-                ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories/${selectedCategory._id}` 
-                : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`;
+                ? `/api/categories/${selectedCategory._id}` 
+                : `/api/categories`;
             
             const method = isEditMode ? 'PATCH' : 'POST';
 
-            const response = await fetch(url, {
+            const result = await apiClient.request<{ success: boolean; message?: string }>(url, {
                 method,
-                body: formData,
-                credentials: 'include'
+                body: uploadData
             });
 
-            const result = await response.json();
             if (result.success) {
                 setSuccessMsg(isEditMode ? 'Category updated successfully' : 'Category created successfully');
                 setIsFormModalOpen(false);
@@ -151,8 +144,8 @@ export default function CategoriesPage() {
             } else {
                 setError(result.message || 'Action failed');
             }
-        } catch (err) {
-            setError('An error occurred. Please try again.');
+        } catch (err: any) {
+            setError(err.message || 'An error occurred. Please try again.');
             console.error(err);
         } finally {
             setSubmitting(false);

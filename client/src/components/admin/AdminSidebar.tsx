@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { apiClient } from '@/lib/api/apiClient';
 
 interface AdminSidebarProps {
     isOpen: boolean;
@@ -16,20 +17,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/logout`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            // Forcefully clear the local auth cookies to preserve UX security.
-            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-            document.cookie = 'adminToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            await apiClient.post('/api/auth/logout');
+            
+            // Redirect to login - cookies are cleared by the backend (HttpOnly)
             router.push('/admin/login');
         } catch (error) {
             console.error('Logout failed', error);
-            // Fallback clear
-            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-            document.cookie = 'adminToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            // Fallback redirect
             router.push('/admin/login');
         } finally {
             setIsLoggingOut(false);

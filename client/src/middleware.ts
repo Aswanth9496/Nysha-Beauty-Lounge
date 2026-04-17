@@ -3,9 +3,9 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('accessToken')?.value;
 
-    // A token is considered invalid if it's missing or set to 'none' (from old logout logic)
+    // A token is considered invalid if it's missing or set to 'none'
     const isAuthenticated = token && token !== 'none' && token !== '';
 
     // 1. If trying to access protected routes without a valid token -> Redirect to login

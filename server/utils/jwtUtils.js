@@ -1,38 +1,53 @@
 const jwt = require('jsonwebtoken');
 
-// Generate JWT Token
-const generateToken = (id) => {
+// Generate Access Token
+const generateAccessToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE || '30d',
+    expiresIn: process.env.JWT_ACCESS_EXPIRE || '15m',
   });
 };
 
-// Send token response in cookie
-const sendTokenResponse = (admin, statusCode, res) => {
-  const token = generateToken(admin._id);
+// Generate Refresh Token
+const generateRefreshToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d',
+  });
+};
 
-  const options = {
-    expires: new Date(
-      Date.now() + (process.env.JWT_COOKIE_EXPIRE || 30) * 24 * 60 * 60 * 1000
-    ),
+// Send token response in cookies
+const sendTokenResponse = (admin, statusCode, res) => {
+  const accessToken = generateAccessToken(admin._id);
+  const refreshToken = generateRefreshToken(admin._id);
+
+  const cookieOptions = {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict', // Critical for CSRF protection
+    path: '/',
   };
 
-  if (process.env.NODE_ENV === 'production') {
-    options.secure = true;
-  }
+  // Set Access Token Cookie (short-lived)
+  res.cookie('accessToken', accessToken, {
+    ...cookieOptions,
+    maxAge: 15 * 60 * 1000, // 15 minutes in ms
+  });
+
+  // Set Refresh Token Cookie (longer-lived)
+  const refreshExpireDays = parseInt(process.env.JWT_REFRESH_COOKIE_EXPIRE) || 7;
+  res.cookie('refreshToken', refreshToken, {
+    ...cookieOptions,
+    maxAge: refreshExpireDays * 24 * 60 * 60 * 1000, // Convert days to ms
+  });
 
   if (admin.password) {
     admin.password = undefined;
   }
 
-  res
-    .status(statusCode)
-    .cookie('token', token, options)
-    .json({
-      success: true,
-      admin
-    });
+  res.status(statusCode).json({
+    success: true,
+    admin,
+    // We don't send tokens in the JSON body because we use HttpOnly cookies for security
+  });
 };
 
-module.exports = { generateToken, sendTokenResponse };
+module.exports = { generateAccessToken, generateRefreshToken, sendTokenResponse };

@@ -5,8 +5,8 @@ const Admin = require('../models/Admin');
 exports.protect = async (req, res, next) => {
   let token;
 
-  if (req.cookies.token) {
-    token = req.cookies.token;
+  if (req.cookies.accessToken) {
+    token = req.cookies.accessToken;
   }
 
   // Make sure token exists
@@ -19,9 +19,14 @@ exports.protect = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.admin = await Admin.findById(decoded.id);
+    
+    if (!req.admin) {
+      return res.status(401).json({ success: false, message: 'Admin no longer exists' });
+    }
+    
     next();
   } catch (err) {
-    return res.status(401).json({ success: false, message: 'Not authorized to access this route' });
+    return res.status(401).json({ success: false, message: 'Not authorized - Token invalid or expired' });
   }
 };
 

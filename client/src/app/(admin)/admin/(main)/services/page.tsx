@@ -6,6 +6,8 @@ import AdminTable from '@/components/admin/AdminTable';
 import AdminBadge from '@/components/admin/AdminBadge';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminModal from '@/components/admin/AdminModal';
+import { apiClient } from '@/lib/api/apiClient';
+import { config } from '@/lib/api/config';
 
 interface Category {
     _id: string;
@@ -78,10 +80,9 @@ export default function ServicesPage() {
     const fetchServices = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/services`, { credentials: 'include' });
-            const result = await response.json();
+            const result = await apiClient.get<{ success: boolean; data: Service[] }>('/api/services');
             if (result.success) setServices(result.data);
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to fetch services:', err);
         } finally {
             setLoading(false);
@@ -90,15 +91,13 @@ export default function ServicesPage() {
 
     const fetchDropdowns = async () => {
         try {
-            const [catRes, subRes] = await Promise.all([
-                fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`, { credentials: 'include' }),
-                fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories`, { credentials: 'include' })
+            const [catResult, subResult] = await Promise.all([
+                apiClient.get<{ success: boolean; data: Category[] }>('/api/categories'),
+                apiClient.get<{ success: boolean; data: SubCategory[] }>('/api/subcategories')
             ]);
-            const catResult = await catRes.json();
-            const subResult = await subRes.json();
             if (catResult.success) setCategories(catResult.data);
             if (subResult.success) setSubCategories(subResult.data);
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to fetch dropdown data:', err);
         }
     };
@@ -173,11 +172,7 @@ export default function ServicesPage() {
         if (!selectedService) return;
         setSubmitting(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/services/${selectedService._id}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.delete<{ success: boolean; message?: string }>(`/api/services/${selectedService._id}`);
             if (result.success) {
                 setSuccessMsg('Service deleted successfully');
                 setIsDeleteModalOpen(false);
@@ -185,8 +180,8 @@ export default function ServicesPage() {
             } else {
                 setError(result.message || 'Deletion failed');
             }
-        } catch (err) {
-            setError('Connection error');
+        } catch (err: any) {
+            setError(err.message || 'Connection error');
         } finally {
             setSubmitting(false);
         }
@@ -204,44 +199,42 @@ export default function ServicesPage() {
         }
 
         try {
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('subCategoryId', subCategoryId);
-            formData.append('subtitle', subtitle);
-            formData.append('description', description);
-            formData.append('duration', duration);
-            formData.append('has_variants', String(hasVariants));
-            formData.append('is_visible', String(isVisible));
-            formData.append('sort_order', sortOrder);
+            const uploadData = new FormData();
+            uploadData.append('title', title);
+            uploadData.append('subCategoryId', subCategoryId);
+            uploadData.append('subtitle', subtitle);
+            uploadData.append('description', description);
+            uploadData.append('duration', duration);
+            uploadData.append('has_variants', String(hasVariants));
+            uploadData.append('is_visible', String(isVisible));
+            uploadData.append('sort_order', sortOrder);
             
             if (hasVariants) {
-                formData.append('variants', JSON.stringify(variants));
+                uploadData.append('variants', JSON.stringify(variants));
             } else {
-                formData.append('amount', amount);
+                uploadData.append('amount', amount);
             }
 
             if (whatsIncluded) {
                 const includedArray = whatsIncluded.split(',').map(item => item.trim()).filter(Boolean);
-                formData.append('whats_included', JSON.stringify(includedArray));
+                uploadData.append('whats_included', JSON.stringify(includedArray));
             }
 
             if (imageFile) {
-                formData.append('image_url', imageFile);
+                uploadData.append('image_url', imageFile);
             }
 
             const url = isEditMode && selectedService 
-                ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/services/${selectedService._id}` 
-                : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/services`;
+                ? `/api/services/${selectedService._id}` 
+                : `/api/services`;
             
             const method = isEditMode ? 'PATCH' : 'POST';
 
-            const response = await fetch(url, {
+            const result = await apiClient.request<{ success: boolean; message?: string }>(url, {
                 method,
-                body: formData,
-                credentials: 'include'
+                body: uploadData
             });
 
-            const result = await response.json();
             if (result.success) {
                 setSuccessMsg(isEditMode ? 'Service updated' : 'Service created');
                 setIsFormModalOpen(false);
@@ -250,8 +243,8 @@ export default function ServicesPage() {
             } else {
                 setError(result.message || 'Action failed');
             }
-        } catch (err) {
-            setError('An error occurred');
+        } catch (err: any) {
+            setError(err.message || 'An error occurred');
         } finally {
             setSubmitting(false);
         }

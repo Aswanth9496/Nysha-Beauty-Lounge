@@ -6,6 +6,8 @@ import AdminTable from '@/components/admin/AdminTable';
 import AdminBadge from '@/components/admin/AdminBadge';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import AdminModal from '@/components/admin/AdminModal';
+import { apiClient } from '@/lib/api/apiClient';
+import { config } from '@/lib/api/config';
 
 interface Category {
     _id: string;
@@ -16,11 +18,9 @@ interface SubCategory {
     _id: string;
     categoryId: Category | string;
     name: string;
-    description?: string;
-    cover_image?: string;
-    images?: string[];
-    is_visible: boolean;
-    sort_order: number;
+    description: string;
+    photo?: string;
+    isActive: boolean;
     createdAt?: string;
 }
 
@@ -51,14 +51,11 @@ export default function SubCategoriesPage() {
     const fetchSubCategories = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories`, {
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.get<{ success: boolean; data: SubCategory[] }>('/api/subcategories');
             if (result.success) {
                 setSubCategories(result.data);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to fetch sub-categories:', err);
         } finally {
             setLoading(false);
@@ -67,14 +64,11 @@ export default function SubCategoriesPage() {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`, {
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.get<{ success: boolean; data: Category[] }>('/api/categories');
             if (result.success) {
                 setCategories(result.data);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to fetch categories:', err);
         }
     };
@@ -128,11 +122,7 @@ export default function SubCategoriesPage() {
         if (!selectedSubCategory) return;
         setSubmitting(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories/${selectedSubCategory._id}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.delete<{ success: boolean; message?: string }>(`/api/subcategories/${selectedSubCategory._id}`);
             if (result.success) {
                 setSuccessMsg('Sub-category deleted successfully');
                 setIsDeleteModalOpen(false);
@@ -140,8 +130,8 @@ export default function SubCategoriesPage() {
             } else {
                 setError(result.message || 'Failed to delete sub-category');
             }
-        } catch (err) {
-            setError('Connection error. Please try again.');
+        } catch (err: any) {
+            setError(err.message || 'Connection error. Please try again.');
         } finally {
             setSubmitting(false);
         }
@@ -159,29 +149,27 @@ export default function SubCategoriesPage() {
         }
 
         try {
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('categoryId', categoryId);
-            formData.append('description', description);
-            formData.append('is_visible', String(isVisible));
-            formData.append('sort_order', sortOrder);
+            const uploadData = new FormData();
+            uploadData.append('name', name);
+            uploadData.append('categoryId', categoryId);
+            uploadData.append('description', description);
+            uploadData.append('is_visible', String(isVisible));
+            uploadData.append('sort_order', sortOrder);
             if (coverImage) {
-                formData.append('cover_image', coverImage);
+                uploadData.append('cover_image', coverImage);
             }
 
             const url = isEditMode && selectedSubCategory 
-                ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories/${selectedSubCategory._id}` 
-                : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories`;
+                ? `/api/subcategories/${selectedSubCategory._id}` 
+                : `/api/subcategories`;
             
             const method = isEditMode ? 'PATCH' : 'POST';
 
-            const response = await fetch(url, {
+            const result = await apiClient.request<{ success: boolean; message?: string }>(url, {
                 method,
-                body: formData,
-                credentials: 'include'
+                body: uploadData
             });
 
-            const result = await response.json();
             if (result.success) {
                 setSuccessMsg(isEditMode ? 'Sub-category updated successfully' : 'Sub-category created successfully');
                 setIsFormModalOpen(false);
@@ -190,8 +178,8 @@ export default function SubCategoriesPage() {
             } else {
                 setError(result.message || 'Action failed');
             }
-        } catch (err) {
-            setError('An error occurred. Please try again.');
+        } catch (err: any) {
+            setError(err.message || 'An error occurred. Please try again.');
             console.error(err);
         } finally {
             setSubmitting(false);

@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
-import AdminBadge from '@/components/admin/AdminBadge';
+import { apiClient } from '@/lib/api/apiClient';
+import { config } from '@/lib/api/config';
 
 interface Expert {
     _id: string;
     role: string;
-    description?: string;
-    image: string;
+    description: string;
+    image?: string;
+    createdAt?: string;
 }
 
 export default function ExpertsPage() {
@@ -32,8 +34,7 @@ export default function ExpertsPage() {
     const fetchExperts = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/experts`);
-            const data = await res.json();
+            const data = await apiClient.get<{ success: boolean; data: Expert[] }>('/api/experts');
             if (data.success) {
                 setExperts(data.data);
             }
@@ -101,27 +102,26 @@ export default function ExpertsPage() {
 
         try {
             const url = isEditing && currentExpertId
-                ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/experts/${currentExpertId}`
-                : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/experts`;
+                ? `/api/experts/${currentExpertId}`
+                : `/api/experts`;
             
             const method = isEditing ? 'PATCH' : 'POST';
 
-            const res = await fetch(url, {
+            // apiClient.request handles FormData and headers automatically
+            const result = await apiClient.request<{ success: boolean; message?: string }>(url, {
                 method,
-                body: uploadData,
-                credentials: 'include'
+                body: uploadData
             });
 
-            const data = await res.json();
-            if (data.success) {
+            if (result.success) {
                 setIsModalOpen(false);
                 fetchExperts(); // Refresh
             } else {
-                alert(`Error: ${data.message}`);
+                alert(`Error: ${result.message}`);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Submission error:', error);
-            alert('Failed to save expert');
+            alert(error.message || 'Failed to save expert');
         } finally {
             setSubmitting(false);
         }
@@ -131,17 +131,13 @@ export default function ExpertsPage() {
         if (!confirm('Are you sure you want to remove this expert?')) return;
         
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/experts/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            const data = await res.json();
+            const data = await apiClient.delete<{ success: boolean }>(`/api/experts/${id}`);
             if (data.success) {
                 fetchExperts(); // Refresh list
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Delete error:', error);
-            alert('Failed to delete expert');
+            alert(error.message || 'Failed to delete expert');
         }
     };
 

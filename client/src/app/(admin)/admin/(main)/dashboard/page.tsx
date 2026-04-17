@@ -6,6 +6,7 @@ import AdminCard from "@/components/admin/AdminCard";
 import AdminTable from "@/components/admin/AdminTable";
 import AdminBadge from "@/components/admin/AdminBadge";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import { apiClient } from "@/lib/api/apiClient";
 
 interface Stats {
     categories: number;
@@ -32,15 +33,11 @@ export default function DashboardPage() {
         const fetchDashboardData = async () => {
             try {
                 setLoading(true);
-                const [catRes, subRes, serRes] = await Promise.all([
-                    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`),
-                    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subcategories`),
-                    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/services`)
+                const [categories, subcategories, services] = await Promise.all([
+                    apiClient.get<{ success: boolean; data: any[] }>('/api/categories'),
+                    apiClient.get<{ success: boolean; data: any[] }>('/api/subcategories'),
+                    apiClient.get<{ success: boolean; data: any[] }>('/api/services')
                 ]);
-
-                const categories = await catRes.json();
-                const subcategories = await subRes.json();
-                const services = await serRes.json();
 
                 if (categories.success && subcategories.success && services.success) {
                     const servList = services.data || [];

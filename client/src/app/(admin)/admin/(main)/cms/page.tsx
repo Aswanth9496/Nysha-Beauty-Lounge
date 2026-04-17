@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminCard from '@/components/admin/AdminCard';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import { apiClient } from '@/lib/api/apiClient';
+import { config } from '@/lib/api/config';
 
 interface HeaderContent {
     _id: string;
@@ -62,10 +64,7 @@ export default function CMSPage() {
     const fetchCMSData = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`, {
-                credentials: 'include'
-            });
-            const result = await response.json();
+            const result = await apiClient.get<{ success: boolean; data: HeaderContent[] }>('/api/header');
             if (result.success && result.data && result.data.length > 0) {
                 const data = result.data[0];
                 setHeader(data);
@@ -79,9 +78,9 @@ export default function CMSPage() {
                 setBannerText(data.banner_text || '');
                 setIsActive(data.isActive);
 
-                if (data.logo) setLogoPreview(`${process.env.NEXT_PUBLIC_API_BASE_URL}${data.logo}`);
-                if (data.shop_image_1) setShopImage1Preview(`${process.env.NEXT_PUBLIC_API_BASE_URL}${data.shop_image_1}`);
-                if (data.shop_image_2) setShopImage2Preview(`${process.env.NEXT_PUBLIC_API_BASE_URL}${data.shop_image_2}`);
+                if (data.logo) setLogoPreview(`${config.API_BASE_URL}${data.logo}`);
+                if (data.shop_image_1) setShopImage1Preview(`${config.API_BASE_URL}${data.shop_image_1}`);
+                if (data.shop_image_2) setShopImage2Preview(`${config.API_BASE_URL}${data.shop_image_2}`);
 
                 if (data.banner_images) {
                     setBannerItems(data.banner_images.map((img: string, idx: number) => ({
@@ -91,8 +90,8 @@ export default function CMSPage() {
                     })));
                 }
             }
-        } catch (err) {
-            setError('Connection failed');
+        } catch (err: any) {
+            setError(err.message || 'Connection failed');
         } finally {
             setLoading(false);
         }
@@ -168,46 +167,44 @@ export default function CMSPage() {
         setSubmitting(true);
 
         try {
-            const formData = new FormData();
-            formData.append('sub_title', subTitle);
-            formData.append('phone_number', phoneNumber);
-            formData.append('secondary_phone_number', secondaryPhoneNumber);
-            formData.append('email', email);
-            formData.append('address', address);
-            formData.append('latitude', latitude);
-            formData.append('longitude', longitude);
-            formData.append('banner_text', bannerText);
-            formData.append('isActive', String(isActive));
+            const uploadData = new FormData();
+            uploadData.append('sub_title', subTitle);
+            uploadData.append('phone_number', phoneNumber);
+            uploadData.append('secondary_phone_number', secondaryPhoneNumber);
+            uploadData.append('email', email);
+            uploadData.append('address', address);
+            uploadData.append('latitude', latitude);
+            uploadData.append('longitude', longitude);
+            uploadData.append('banner_text', bannerText);
+            uploadData.append('isActive', String(isActive));
 
-            if (logoFile) formData.append('logo', logoFile);
-            else if (!logoPreview && header?.logo) formData.append('logo', '');
+            if (logoFile) uploadData.append('logo', logoFile);
+            else if (!logoPreview && header?.logo) uploadData.append('logo', '');
 
-            if (shopImage1File) formData.append('shop_image_1', shopImage1File);
-            else if (!shopImage1Preview && header?.shop_image_1) formData.append('shop_image_1', '');
+            if (shopImage1File) uploadData.append('shop_image_1', shopImage1File);
+            else if (!shopImage1Preview && header?.shop_image_1) uploadData.append('shop_image_1', '');
 
-            if (shopImage2File) formData.append('shop_image_2', shopImage2File);
-            else if (!shopImage2Preview && header?.shop_image_2) formData.append('shop_image_2', '');
+            if (shopImage2File) uploadData.append('shop_image_2', shopImage2File);
+            else if (!shopImage2Preview && header?.shop_image_2) uploadData.append('shop_image_2', '');
 
             bannerItems.forEach(item => {
-                if (item.type === 'existing') formData.append('banner_images', item.url);
-                else if (item.file) formData.append('banner_images', item.file);
+                if (item.type === 'existing') uploadData.append('banner_images', item.url);
+                else if (item.file) uploadData.append('banner_images', item.file);
             });
 
-            if (bannerItems.length === 0) formData.append('banner_images', '');
+            if (bannerItems.length === 0) uploadData.append('banner_images', '');
 
             const url = header
-                ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header/${header._id}`
-                : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`;
+                ? `/api/header/${header._id}`
+                : `/api/header`;
 
             const method = header ? 'PATCH' : 'POST';
 
-            const response = await fetch(url, {
+            const result = await apiClient.request<{ success: boolean; data: HeaderContent; message?: string }>(url, {
                 method,
-                body: formData,
-                credentials: 'include'
+                body: uploadData
             });
 
-            const result = await response.json();
             if (result.success) {
                 setSuccessMsg('Integrated successfully');
                 const updatedData = result.data;
@@ -216,9 +213,9 @@ export default function CMSPage() {
                 setShopImage1File(null);
                 setShopImage2File(null);
 
-                if (updatedData.logo) setLogoPreview(`${process.env.NEXT_PUBLIC_API_BASE_URL}${updatedData.logo}`);
-                if (updatedData.shop_image_1) setShopImage1Preview(`${process.env.NEXT_PUBLIC_API_BASE_URL}${updatedData.shop_image_1}`);
-                if (updatedData.shop_image_2) setShopImage2Preview(`${process.env.NEXT_PUBLIC_API_BASE_URL}${updatedData.shop_image_2}`);
+                if (updatedData.logo) setLogoPreview(`${config.API_BASE_URL}${updatedData.logo}`);
+                if (updatedData.shop_image_1) setShopImage1Preview(`${config.API_BASE_URL}${updatedData.shop_image_1}`);
+                if (updatedData.shop_image_2) setShopImage2Preview(`${config.API_BASE_URL}${updatedData.shop_image_2}`);
 
                 if (updatedData.banner_images) {
                     setBannerItems(updatedData.banner_images.map((img: string, idx: number) => ({
@@ -228,8 +225,8 @@ export default function CMSPage() {
                     })));
                 } else setBannerItems([]);
             } else setError(result.message || 'Update failed');
-        } catch (err) {
-            setError('An error occurred');
+        } catch (err: any) {
+            setError(err.message || 'An error occurred');
         } finally {
             setSubmitting(false);
         }
