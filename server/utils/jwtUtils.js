@@ -22,7 +22,7 @@ const sendTokenResponse = (admin, statusCode, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict', // Critical for CSRF protection
+    sameSite: 'lax', // Lax is more reliable for production redirects while remaining secure
     path: '/',
   };
 

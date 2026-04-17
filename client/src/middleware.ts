@@ -1,22 +1,25 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    
+    // Attempt to get the access token from cookies
     const token = request.cookies.get('accessToken')?.value;
 
-    // A token is considered invalid if it's missing or set to 'none'
-    const isAuthenticated = token && token !== 'none' && token !== '';
+    // A token is considered valid if it's present and not explicitly set to empty/invalid values
+    const isAuthenticated = !!(token && token !== 'none' && token !== '');
 
-    // 1. If trying to access protected routes without a valid token -> Redirect to login
+    // 1. PROTECT ADMIN ROUTES: If trying to access /admin pages without a valid token
     if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
         if (!isAuthenticated) {
+            // Redirect to the login page while preserving the intended destination
             const loginUrl = new URL('/admin/login', request.url);
             return NextResponse.redirect(loginUrl);
         }
     }
 
-    // 2. If trying to access login page while already authenticated -> Redirect to dashboard
+    // 2. PREVENT LOGIN PAGE ACCESS IF ALREADY AUTHENTICATED
     if (pathname === '/admin/login') {
         if (isAuthenticated) {
             const dashboardUrl = new URL('/admin/dashboard', request.url);

@@ -31,16 +31,18 @@ const AdminLoginForm = () => {
             });
 
             if (data.success) {
-                // Token is handled securely via httpOnly cookie from the backend.
-                // Redirect to dashboard
                 router.push("/admin/dashboard");
             } else {
                 setError(data.message || "Invalid email or password");
                 setIsLoading(false);
             }
         } catch (err: any) {
-            console.error("Login Error:", err);
-            setError(err.message || "Unable to connect to server. Please try again.");
+            // Specifically handle 401 Unauthorized for invalid credentials
+            if (err.status === 401) {
+                setError("Invalid email or password");
+            } else {
+                setError(err.message || "Unable to connect to server. Please try again.");
+            }
             setIsLoading(false);
         }
     };

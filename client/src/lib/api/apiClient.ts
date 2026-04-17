@@ -4,6 +4,7 @@ type RequestMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 interface RequestOptions extends RequestInit {
   method?: RequestMethod;
+  _retry?: boolean;
 }
 
 /**
@@ -18,7 +19,7 @@ class ApiClient {
     this.baseUrl = config.API_BASE_URL.replace(/\/$/, ""); // Remove trailing slash if any
   }
 
-  private async processQueue(error: Error | null, success = false) {
+  private async processQueue(error: Error | null) {
     this.failedQueue.forEach((prom) => {
       if (error) {
         prom.reject(error);
@@ -59,12 +60,16 @@ class ApiClient {
       const response = await fetch(url, mergedOptions);
 
       // Handle 401 Unauthorized - Attempt Refresh
-      if (response.status === 401 && !url.includes("/api/auth/login") && !url.includes("/api/auth/refresh")) {
+      // Only attempt refresh if not already a login/refresh request and NOT a retry
+      if (response.status === 401 && 
+          !url.includes("/api/auth/login") && 
+          !url.includes("/api/auth/refresh") && 
+          !options._retry) {
+        
         if (this.isRefreshing) {
-          // If already refreshing, wait for it to complete
           return new Promise((resolve, reject) => {
             this.failedQueue.push({ resolve, reject });
-          }).then(() => this.request<T>(endpoint, options));
+          }).then(() => this.request<T>(endpoint, { ...options, _retry: true }));
         }
 
         this.isRefreshing = true;
@@ -78,16 +83,11 @@ class ApiClient {
 
           if (refreshRes.ok) {
             this.isRefreshing = false;
-            this.processQueue(null, true);
-            // Retry the original request
-            return this.request<T>(endpoint, options);
+            this.processQueue(null);
+            // Retry the original request exactly once
+            return this.request<T>(endpoint, { ...options, _retry: true });
           } else {
             // Refresh failed - Redirect to login
-            this.isRefreshing = false;
-            this.processQueue(new Error("Session expired"));
-            if (typeof window !== "undefined") {
-              window.location.href = "/admin/login";
-            }
             throw new Error("Session expired");
           }
         } catch (refreshErr) {
@@ -117,7 +117,14 @@ class ApiClient {
 
       return (await response.text()) as unknown as T;
     } catch (error: any) {
-      console.error(`API Request Error [${mergedOptions.method || "GET"} ${endpoint}]:`, error);
+      // Suppress console.error for expected authentication failures (401) on login/refresh
+      const isExpectedAuthError = 
+        error?.status === 401 && 
+        (endpoint.includes("/api/auth/login") || endpoint.includes("/api/auth/refresh"));
+
+      if (!isExpectedAuthError) {
+        console.error(`API Request Error [${mergedOptions.method || "GET"} ${endpoint}]:`, error);
+      }
       throw error;
     }
   }
