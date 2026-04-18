@@ -216,7 +216,7 @@ function ServicesContent() {
                                         </button>
                                         
                                         <a 
-                                            href={`https://wa.me/97145709468?text=${encodeURIComponent(`Hi Nysha Beauty Lounge, I would like to book the ${sub.name} treatment.`)}`}
+                                            href="https://www.fresha.com/a/nysha-beauty-lounge-dubai-3654-j5p-dubai-jvc-25deg0332-7-n-55deg1219-6-e-dubai-htjn822h/all-offer?menu=true&share=true&pId=2805835"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="group/book relative overflow-hidden w-full sm:flex-1 text-[9px] tracking-[4px] uppercase text-[#080808] py-[15px] px-8 bg-gold border border-gold transition-all duration-[450ms] hover:bg-transparent hover:text-gold no-underline text-center font-bold flex items-center justify-center"
@@ -287,7 +287,7 @@ function ServicesContent() {
                                                             {svc.amount ? `AED ${svc.amount}` : "Consult"}
                                                         </span>
                                                         <a 
-                                                            href={`https://wa.me/97145709468?text=${encodeURIComponent(svc.whatsapp_message || `Hi, I'm interested in the ${svc.title} ritual.`)}`}
+                                                            href="https://www.fresha.com/a/nysha-beauty-lounge-dubai-3654-j5p-dubai-jvc-25deg0332-7-n-55deg1219-6-e-dubai-htjn822h/all-offer?menu=true&share=true&pId=2805835"
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-[9px] tracking-[2px] uppercase text-black bg-gold px-6 py-3 font-bold hover:bg-white transition-all duration-300 no-underline whitespace-nowrap"
@@ -315,7 +315,7 @@ function ServicesContent() {
                                                                 <div className="flex items-center gap-4">
                                                                     <span className="text-gold font-playfair text-[15px] sm:text-[16px]">AED {v.amount}</span>
                                                                     <a 
-                                                                        href={`https://wa.me/97145709468?text=${encodeURIComponent(`Hi, I'm interested in the ${svc.title} (${v.label}) ritual.`)}`}
+                                                                        href="https://www.fresha.com/a/nysha-beauty-lounge-dubai-3654-j5p-dubai-jvc-25deg0332-7-n-55deg1219-6-e-dubai-htjn822h/all-offer?menu=true&share=true&pId=2805835"
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         className="text-[8px] tracking-[1.5px] uppercase text-white hover:text-gold border border-white/10 hover:border-gold px-4 py-1.5 transition-all duration-300 no-underline"

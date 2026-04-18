@@ -37,10 +37,17 @@ export default function Hero() {
                 </p>
 
                 <div className="opacity-0 animate-[fadeUp_0.9s_1.2s_forwards]">
-                    <button className="group relative overflow-hidden font-dm-sans text-[10px] font-light tracking-[4.5px] uppercase py-[17px] px-12 border border-gold text-gold bg-transparent cursor-pointer transition-colors duration-[0.35s] hover:text-[#080808]">
-                        <span className="relative z-10">Book Your Appointment</span>
-                        <div className="absolute inset-0 bg-gold -translate-x-[101%] transition-transform duration-[0.38s] cubic-bezier-[0.77,0,0.18,1] group-hover:translate-x-0" />
-                    </button>
+                    <div className="opacity-0 animate-[fadeUp_0.9s_1.2s_forwards]">
+                 <a
+                  href="https://www.fresha.com/a/nysha-beauty-lounge-dubai-3654-j5p-dubai-jvc-25deg0332-7-n-55deg1219-6-e-dubai-htjn822h/all-offer?menu=true&share=true&pId=2805835"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="group relative overflow-hidden font-dm-sans text-[10px] font-light tracking-[4.5px] uppercase py-[17px] px-12 border border-gold text-gold bg-transparent cursor-pointer transition-colors duration-[0.35s] hover:text-[#080808] inline-flex items-center justify-center no-underline"
+                 >
+                   <span className="relative z-10">Book Your Appointment</span>
+                   <div className="absolute inset-0 bg-gold -translate-x-[101%] transition-transform duration-[0.38s] cubic-bezier-[0.77,0,0.18,1] group-hover:translate-x-0" />
+                 </a>
+               </div>
                 </div>
             </div>
 

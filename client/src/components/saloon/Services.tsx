@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface Category {
@@ -116,7 +116,13 @@ export default function Services() {
                         className="group relative h-full flex-shrink-0 w-[82vw] sm:w-auto snap-center"
                     >
                         <div className="relative block h-full overflow-hidden bg-[#181818] border border-white/5 transition-all duration-[0.45s] cubic-bezier-[0.4,0,0.2,1] hover:border-gold/45 sm:hover:-translate-y-[9px] sm:hover:shadow-[0_24px_60px_rgba(0,0,0,0.55),0_0_0_1px_rgba(201,168,76,0.1)]">
-                            <Link href={svc.link} className="absolute inset-0 z-[1] cursor-pointer" aria-label={`Book ${svc.name}`} />
+                            <a 
+                                href="https://www.fresha.com/a/nysha-beauty-lounge-dubai-3654-j5p-dubai-jvc-25deg0332-7-n-55deg1219-6-e-dubai-htjn822h/all-offer?menu=true&share=true&pId=2805835" 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="absolute inset-0 z-[1] cursor-pointer" 
+                                aria-label={`Book ${svc.name}`} 
+                            />
 
                             <div className="w-full aspect-[3/4] relative overflow-hidden">
                                 <img

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { apiClient } from "@/lib/api/apiClient";
 
 interface HeaderContent {
     address?: string;
@@ -18,8 +19,7 @@ export default function Footer() {
     useEffect(() => {
         const fetchCMS = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/header`);
-                const result = await res.json();
+                const result: any = await apiClient.get("/api/header");
                 if (result.success && result.data && result.data.length > 0) {
                     setHeader(result.data[0]);
                 }

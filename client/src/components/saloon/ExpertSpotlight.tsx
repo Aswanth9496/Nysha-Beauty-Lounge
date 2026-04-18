@@ -38,7 +38,9 @@ export default function ExpertSpotlight() {
 
                         <div className="mt-10">
                             <a
-                                href="#book"
+                                href="https://www.fresha.com/a/nysha-beauty-lounge-dubai-3654-j5p-dubai-jvc-25deg0332-7-n-55deg1219-6-e-dubai-htjn822h/all-offer?menu=true&share=true&pId=2805835"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="group relative overflow-hidden font-dm-sans text-[10px] font-light tracking-[3.5px] uppercase py-[15px] px-[44px] border border-gold text-gold bg-transparent cursor-pointer transition-colors duration-[0.35s] hover:text-[#080808] inline-block no-underline"
                             >
                                 <span className="relative z-10">Book with Aaliya</span>
