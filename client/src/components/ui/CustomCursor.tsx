@@ -13,8 +13,7 @@ export default function CustomCursor() {
             mx = e.clientX;
             my = e.clientY;
             if (dotRef.current) {
-                dotRef.current.style.left = mx + 'px';
-                dotRef.current.style.top = my + 'px';
+                dotRef.current.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
             }
         };
 
@@ -22,8 +21,7 @@ export default function CustomCursor() {
             rx += (mx - rx) * 0.11;
             ry += (my - ry) * 0.11;
             if (ringRef.current) {
-                ringRef.current.style.left = rx + 'px';
-                ringRef.current.style.top = ry + 'px';
+                ringRef.current.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
             }
             requestAnimationFrame(loop);
         };
@@ -41,22 +39,22 @@ export default function CustomCursor() {
         <>
             <div
                 ref={dotRef}
-                className="fixed w-2 h-2 bg-gold2 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 hidden md:block"
+                className="fixed top-0 left-0 w-2 h-2 bg-gold2 rounded-full pointer-events-none z-[9999] hidden md:block"
             />
             <div
                 ref={ringRef}
-                className="fixed w-[34px] h-[34px] border border-[rgba(201,168,76,0.55)] rounded-full pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 transition-all duration-[0.18s] ease hidden md:block"
+                className="fixed top-0 left-0 w-[34px] h-[34px] border border-[rgba(201,168,76,0.55)] rounded-full pointer-events-none z-[9998] transition-transform duration-[0.18s] ease hidden md:block"
             />
             <style jsx global>{`
-        @media (min-width: 768px) {
-          body {
-            cursor: none;
-          }
-          a, button, [role="button"], .srv-card {
-            cursor: none;
-          }
-        }
-      `}</style>
+                @media (min-width: 768px) {
+                    body {
+                        cursor: none;
+                    }
+                    a, button, [role="button"], .srv-card {
+                        cursor: none;
+                    }
+                }
+            `}</style>
         </>
     );
 }
