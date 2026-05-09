@@ -5,7 +5,7 @@ const categoryService = require('../services/categoryService');
 // @access  Private/Admin
 exports.addCategory = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, metaTitle, metaDescription, metaKeywords } = req.body;
     let isActive = req.body.isActive;
     
     // Parse boolean from multipart/form-data string if necessary
@@ -22,7 +22,16 @@ exports.addCategory = async (req, res) => {
     }
 
     // Build the data object
-    const dataObj = { name, description, photo };
+    const dataObj = { 
+      name, 
+      description, 
+      photo,
+      metadata: {
+        title: metaTitle,
+        description: metaDescription,
+        keywords: metaKeywords
+      }
+    };
     if (isActive !== undefined) dataObj.isActive = isActive;
 
     const category = await categoryService.addCategory(dataObj);
@@ -49,7 +58,7 @@ exports.getCategories = async (req, res) => {
 // @access  Private/Admin
 exports.editCategory = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, metaTitle, metaDescription, metaKeywords } = req.body;
     let isActive = req.body.isActive;
     
     // Parse boolean from multipart/form-data string if necessary
@@ -63,6 +72,11 @@ exports.editCategory = async (req, res) => {
     if (req.file) {
       dataObj.photo = `/uploads/${req.file.filename}`;
     }
+
+    // Handle Metadata updates (using dot notation for partial updates)
+    if (metaTitle !== undefined) dataObj['metadata.title'] = metaTitle;
+    if (metaDescription !== undefined) dataObj['metadata.description'] = metaDescription;
+    if (metaKeywords !== undefined) dataObj['metadata.keywords'] = metaKeywords;
 
     const category = await categoryService.editCategory(req.params.id, dataObj);
     res.status(200).json({ success: true, data: category });

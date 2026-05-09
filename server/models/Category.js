@@ -14,6 +14,11 @@ const categorySchema = new mongoose.Schema({
   photo: {
     type: String
   },
+  metadata: {
+    title: { type: String, trim: true },
+    description: { type: String, trim: true },
+    keywords: { type: String, trim: true }
+  },
   isActive: {
     type: Boolean,
     default: true,

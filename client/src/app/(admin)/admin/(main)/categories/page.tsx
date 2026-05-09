@@ -15,6 +15,11 @@ interface Category {
     description: string;
     photo?: string;
     isActive: boolean;
+    metadata?: {
+        title?: string;
+        description?: string;
+        keywords?: string;
+    };
     servicesCount?: number;
     createdAt?: string;
 }
@@ -36,6 +41,9 @@ export default function CategoriesPage() {
     const [description, setDescription] = useState('');
     const [photo, setPhoto] = useState<File | null>(null);
     const [isActive, setIsActive] = useState(true);
+    const [metaTitle, setMetaTitle] = useState('');
+    const [metaDescription, setMetaDescription] = useState('');
+    const [metaKeywords, setMetaKeywords] = useState('');
 
     const fetchCategories = async () => {
         try {
@@ -68,6 +76,9 @@ export default function CategoriesPage() {
         setDescription('');
         setPhoto(null);
         setIsActive(true);
+        setMetaTitle('');
+        setMetaDescription('');
+        setMetaKeywords('');
         setError(null);
         setIsEditMode(false);
         setSelectedCategory(null);
@@ -83,6 +94,9 @@ export default function CategoriesPage() {
         setName(category.name);
         setDescription(category.description || '');
         setIsActive(category.isActive);
+        setMetaTitle(category.metadata?.title || '');
+        setMetaDescription(category.metadata?.description || '');
+        setMetaKeywords(category.metadata?.keywords || '');
         setIsEditMode(true);
         setIsFormModalOpen(true);
     };
@@ -121,6 +135,9 @@ export default function CategoriesPage() {
             uploadData.append('name', name);
             uploadData.append('description', description);
             uploadData.append('isActive', String(isActive));
+            uploadData.append('metaTitle', metaTitle);
+            uploadData.append('metaDescription', metaDescription);
+            uploadData.append('metaKeywords', metaKeywords);
             if (photo) {
                 uploadData.append('photo', photo);
             }
@@ -357,6 +374,44 @@ export default function CategoriesPage() {
                         <span className="text-[9px] uppercase tracking-[2px] text-salon-gray">Visible publicly</span>
                     </div>
 
+                    {/* SEO Metadata Section */}
+                    <div className="pt-4 border-t border-salon-border/30 space-y-4">
+                        <h4 className="text-[10px] uppercase tracking-[3px] text-gold font-bold italic">SEO Metadata</h4>
+                        
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] uppercase tracking-[2px] text-salon-gray font-semibold ml-1">Meta Title</label>
+                            <input
+                                type="text"
+                                value={metaTitle}
+                                onChange={(e) => setMetaTitle(e.target.value)}
+                                placeholder="SEO optimized title..."
+                                className="w-full bg-salon-bg2 border border-salon-border px-4 py-3 text-white font-dm-sans text-[11px] tracking-widest uppercase outline-none focus:border-gold transition-all"
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] uppercase tracking-[2px] text-salon-gray font-semibold ml-1">Meta Description</label>
+                            <textarea
+                                rows={2}
+                                value={metaDescription}
+                                onChange={(e) => setMetaDescription(e.target.value)}
+                                placeholder="SEO optimized description..."
+                                className="w-full bg-salon-bg2 border border-salon-border px-4 py-3 text-white font-dm-sans text-[11px] tracking-wider outline-none focus:border-gold transition-all resize-none"
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] uppercase tracking-[2px] text-salon-gray font-semibold ml-1">Meta Keywords</label>
+                            <input
+                                type="text"
+                                value={metaKeywords}
+                                onChange={(e) => setMetaKeywords(e.target.value)}
+                                placeholder="e.g. hair, beauty, salon, dubai"
+                                className="w-full bg-salon-bg2 border border-salon-border px-4 py-3 text-white font-dm-sans text-[11px] tracking-widest outline-none focus:border-gold transition-all"
+                            />
+                        </div>
+                    </div>
+
                     <div className="flex gap-2 pt-4">
                         <button
                             type="button"
@@ -428,6 +483,25 @@ export default function CategoriesPage() {
                                     }) : 'Unknown'}
                                 </p>
                             </div>
+                            {selectedCategory.metadata && (
+                                <div className="col-span-2 space-y-3 pt-3 border-t border-salon-border/10">
+                                    <p className="text-[9px] uppercase tracking-[3px] text-gold font-bold italic">SEO Information</p>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        <div>
+                                            <p className="text-[8px] uppercase tracking-[2px] text-salon-gray mb-1">Meta Title</p>
+                                            <p className="text-[10px] text-white/90">{selectedCategory.metadata.title || 'N/A'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[8px] uppercase tracking-[2px] text-salon-gray mb-1">Meta Description</p>
+                                            <p className="text-[10px] text-white/90 leading-relaxed">{selectedCategory.metadata.description || 'N/A'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[8px] uppercase tracking-[2px] text-salon-gray mb-1">Meta Keywords</p>
+                                            <p className="text-[10px] text-white/90">{selectedCategory.metadata.keywords || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div className="pt-6 text-center">
