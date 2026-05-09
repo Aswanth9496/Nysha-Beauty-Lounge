@@ -96,3 +96,18 @@ exports.deleteCategory = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
+// @desc    Get single category by name (for SEO)
+// @route   GET /api/categories/name/:name
+// @access  Public
+exports.getCategoryByName = async (req, res) => {
+  try {
+    const category = await categoryService.getCategoryByName(req.params.name);
+    if (!category) {
+      return res.status(404).json({ success: false, message: 'Category not found' });
+    }
+    res.status(200).json({ success: true, data: category });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

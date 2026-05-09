@@ -3,7 +3,8 @@ const {
   addCategory,
   getCategories,
   editCategory,
-  deleteCategory
+  deleteCategory,
+  getCategoryByName
 } = require('../controllers/categoryController');
 
 const { protect } = require('../middlewares/authMiddleware');
@@ -18,5 +19,7 @@ router.route('/')
 router.route('/:id')
   .patch(protect, upload.single('photo'), editCategory)
   .delete(protect, deleteCategory);
+
+router.get('/name/:name', getCategoryByName);
 
 module.exports = router;

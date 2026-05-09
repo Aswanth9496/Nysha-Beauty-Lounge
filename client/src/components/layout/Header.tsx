@@ -9,11 +9,18 @@ interface HeaderData {
     phone_number?: string;
 }
 
+interface Category {
+    _id: string;
+    name: string;
+}
+
 export default function Header() {
     const [isSolid, setIsSolid] = useState(false);
     const [headerData, setHeaderData] = useState<HeaderData | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
         if (isMobileMenuOpen) {
@@ -33,13 +40,20 @@ export default function Header() {
 
         const fetchHeaderData = async () => {
             try {
-                const response: any = await apiClient.get("/api/header");
-
-                if (response.success && response.data?.length > 0) {
-                    setHeaderData(response.data[0]);
+                const [headerRes, catRes]: any = await Promise.all([
+                    apiClient.get("/api/header"),
+                    apiClient.get("/api/categories")
+                ]);
+                
+                if (headerRes.success && headerRes.data?.length > 0) {
+                    setHeaderData(headerRes.data[0]);
+                }
+                
+                if (catRes.success) {
+                    setCategories(catRes.data);
                 }
             } catch (error) {
-                console.error("Failed to fetch header data:", error);
+                console.error("Failed to fetch header/categories:", error);
             } finally {
                 setLoading(false);
             }
@@ -56,6 +70,10 @@ export default function Header() {
     const logoUrl = headerData?.logo
         ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${headerData.logo}`
         : null;
+
+    const slugify = (name: string) => {
+        return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    };
 
     return (
         <>
@@ -75,7 +93,7 @@ export default function Header() {
                         <img
                             src={logoUrl}
                             alt="Nysha Beauty Lounge"
-                            className="h-[65%] sm:h-[82%] max-w-[140px] sm:max-w-none w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                            className="h-[80%] sm:h-[82%] max-w-[1st explain to me 0px] sm:max-w-none w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex flex-col justify-center h-full">
@@ -95,24 +113,46 @@ export default function Header() {
                     className={`flex items-center gap-3 sm:gap-6 transition-opacity duration-500 ${loading ? "opacity-50" : "opacity-100"
                         }`}
                 >
-                    {/* Phone (Desktop Only) */}
-                    <a
-                        href={`tel:${displayPhone.replace(/\s/g, "")}`}
-                        className="hidden lg:flex items-center gap-2 text-[12px] tracking-[0.8px] text-salon-gray hover:text-gold transition-colors no-underline"
-                    >
-                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 015.11 12.92 19.79 19.79 0 012.04 4.29 2 2 0 014.03 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
-                        </svg>
-                        {displayPhone}
-                    </a>
-
-                    {/* Services Link (Desktop Only) */}
+                    {/* Contact Link (Desktop Only) */}
                     <Link
-                        href="/services"
-                        className="hidden sm:flex items-center font-dm-sans text-[11px] font-light tracking-[2.5px] uppercase text-salon-gray hover:text-gold transition-colors no-underline whitespace-nowrap"
+                        href="/contact"
+                        className="hidden lg:flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-salon-gray hover:text-gold transition-colors no-underline"
                     >
-                        Services
+                        Contact
                     </Link>
+
+                    {/* Services Link with Dropdown (Desktop Only) */}
+                    <div 
+                        className="relative hidden sm:block"
+                        onMouseEnter={() => setIsDropdownOpen(true)}
+                        onMouseLeave={() => setIsDropdownOpen(false)}
+                    >
+                        <Link
+                            href="/services"
+                            className="flex items-center font-dm-sans text-[11px] font-light tracking-[2.5px] uppercase text-salon-gray hover:text-gold transition-colors no-underline whitespace-nowrap"
+                        >
+                            Services
+                            <svg className={`ml-1.5 w-2.5 h-2.5 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </Link>
+
+                        {/* Dropdown Menu */}
+                        <div className={`absolute top-full -left-4 pt-4 transition-all duration-300 ${isDropdownOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+                            <div className="bg-salon-bg/95 backdrop-blur-xl border border-white/5 py-4 min-w-[200px] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                                {categories.map((cat) => (
+                                    <Link
+                                        key={cat._id}
+                                        href={`/services?category=${slugify(cat.name)}`}
+                                        className="block px-6 py-2.5 text-[9px] tracking-[2.5px] uppercase text-salon-gray hover:text-gold hover:bg-white/5 transition-all"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                    >
+                                        {cat.name}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Book Button (Desktop Only) */}
                     <a
@@ -181,6 +221,27 @@ export default function Header() {
                     >
                         Services
                     </Link>
+                    
+                    {/* Mobile Categories (Sub-menu style) */}
+                    <div className="flex flex-col items-center gap-4 -mt-4 mb-2">
+                        {categories.map((cat) => (
+                            <Link
+                                key={cat._id}
+                                href={`/services?category=${slugify(cat.name)}`}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="font-dm-sans text-[11px] tracking-[3px] uppercase text-salon-gray hover:text-gold transition-colors no-underline"
+                            >
+                                {cat.name}
+                            </Link>
+                        ))}
+                    </div>
+                    <Link
+                        href="/contact"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="font-dm-sans text-[16px] tracking-[4px] uppercase text-white hover:text-gold transition-colors no-underline"
+                    >
+                        Contact
+                    </Link>
 
                     {/* Book Button (Mobile Menu) */}
                     <a
@@ -193,18 +254,6 @@ export default function Header() {
                         <span className="relative z-10">Book Now</span>
                         <div className="absolute inset-0 bg-gold -translate-x-[101%] transition-transform duration-380 ease-out group-hover:translate-x-0" />
                     </a>
-                    
-                    <div className="mt-6 pt-8 border-t border-salon-border/30 w-[80%] flex flex-col items-center gap-6">
-                        <a
-                            href={`tel:${displayPhone.replace(/\s/g, "")}`}
-                            className="font-dm-sans text-[12px] tracking-[2px] text-salon-gray hover:text-gold transition-colors no-underline flex items-center gap-2"
-                        >
-                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 015.11 12.92 19.79 19.79 0 012.04 4.29 2 2 0 014.03 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
-                            </svg>
-                            {displayPhone}
-                        </a>
-                    </div>
                 </div>
             </div>
         </>

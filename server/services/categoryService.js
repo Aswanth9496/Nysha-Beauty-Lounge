@@ -39,3 +39,11 @@ exports.deleteCategory = async (id) => {
   }
   return category;
 };
+
+exports.getCategoryByName = async (name) => {
+  // Case-insensitive search by name
+  return await Category.findOne({ 
+    name: { $regex: new RegExp(`^${name.replace(/-/g, ' ')}$`, 'i') },
+    isDeleted: false 
+  });
+};

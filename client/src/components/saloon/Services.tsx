@@ -181,23 +181,25 @@ export default function Services() {
                                     </p>
                                 </div>
 
-                                {/* BUTTON CLICK = BOOKING LINK */}
-                                <div className="mt-6 relative z-[5]">
+                                {/* BUTTONS */}
+                                <div className="mt-6 relative z-[5] flex items-center justify-between">
                                     <a
                                         href={BOOKING_LINK}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="group/btn relative overflow-hidden font-dm-sans text-[9px] font-light tracking-[2.5px] uppercase py-[10px] px-[26px] border border-gold text-gold bg-transparent transition-colors duration-[0.35s] hover:text-black inline-block"
-                                        onClick={(e) =>
-                                            e.stopPropagation()
-                                        }
+                                        className="group/btn relative overflow-hidden font-dm-sans text-[8px] sm:text-[9px] font-light tracking-[2.5px] uppercase py-[10px] px-[18px] sm:px-[26px] border border-gold text-gold bg-transparent transition-colors duration-[0.35s] hover:text-black inline-block"
+                                        onClick={(e) => e.stopPropagation()}
                                     >
-                                        <span className="relative z-10 font-medium">
-                                            Book Now
-                                        </span>
-
+                                        <span className="relative z-10 font-medium">Book Now</span>
                                         <div className="absolute inset-0 bg-gold -translate-x-[101%] transition-transform duration-[0.38s] group-hover/btn:translate-x-0" />
                                     </a>
+
+                                    <Link
+                                        href={svc.link}
+                                        className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-gold text-black transition-all duration-300 hover:bg-white hover:scale-105 group/arrow"
+                                    >
+                                        <span className="text-lg sm:text-xl transition-transform duration-300 group-hover/arrow:translate-x-0.5">→</span>
+                                    </Link>
                                 </div>
                             </div>
 
