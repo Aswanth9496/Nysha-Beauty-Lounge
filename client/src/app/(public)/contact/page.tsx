@@ -1,37 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function ContactPage() {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "General Inquiry",
-        message: ""
-    });
-    const [submitting, setSubmitting] = useState(false);
-    const [sent, setSent] = useState(false);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setSubmitting(false);
-        setSent(true);
-        setFormData({ name: "", email: "", phone: "", subject: "General Inquiry", message: "" });
-        setTimeout(() => setSent(false), 5000);
-    };
-
     return (
         <main className="min-h-screen bg-salon-bg text-salon-white selection:bg-gold selection:text-salon-bg">
             <CustomCursor />
@@ -45,7 +20,7 @@ export default function ContactPage() {
                 <ScrollReveal className="relative z-10 text-center px-6">
                     <span className="text-[10px] tracking-[6px] text-gold uppercase mb-4 block">Connect With Us</span>
                     <h1 className="font-playfair text-[40px] sm:text-[clamp(45px,6vw,85px)] font-normal leading-tight text-white">
-                        Your Aesthetic <br /> <em className="italic text-gold not-italic">Journey</em> Begins Here
+                        Your Aesthetic Journey <br /> Begins Here
                     </h1>
                 </ScrollReveal>
             </section>
@@ -55,96 +30,35 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
                     
                     {/* Left Side: Contact Form */}
-                    <ScrollReveal className="space-y-12">
-                        <div>
-                            <h2 className="font-playfair text-[28px] sm:text-[34px] text-white mb-4">Send a Message</h2>
-                            <p className="text-salon-gray text-[13px] leading-relaxed italic opacity-70">
-                                Please complete the form below. Our concierge will reach out to you within 24 business hours to finalize your request.
-                            </p>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[9px] uppercase tracking-[2px] text-gold/60">Full Name</label>
-                                    <input 
-                                        type="text" 
-                                        name="name"
-                                        required
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className="w-full bg-transparent border-b border-white/10 py-3 text-[13px] focus:border-gold outline-none transition-colors"
-                                        placeholder="E.g. Isabella Rossi"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[9px] uppercase tracking-[2px] text-gold/60">Email Address</label>
-                                    <input 
-                                        type="email" 
-                                        name="email"
-                                        required
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="w-full bg-transparent border-b border-white/10 py-3 text-[13px] focus:border-gold outline-none transition-colors"
-                                        placeholder="isabella@example.com"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[9px] uppercase tracking-[2px] text-gold/60">Phone Number</label>
-                                    <input 
-                                        type="tel" 
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className="w-full bg-transparent border-b border-white/10 py-3 text-[13px] focus:border-gold outline-none transition-colors"
-                                        placeholder="+971 00 000 0000"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[9px] uppercase tracking-[2px] text-gold/60">Subject</label>
-                                    <select 
-                                        name="subject"
-                                        value={formData.subject}
-                                        onChange={handleChange}
-                                        className="w-full bg-transparent border-b border-white/10 py-3 text-[13px] focus:border-gold outline-none transition-colors appearance-none cursor-pointer"
-                                    >
-                                        <option className="bg-salon-bg" value="General Inquiry">General Inquiry</option>
-                                        <option className="bg-salon-bg" value="Booking Request">Booking Request</option>
-                                        <option className="bg-salon-bg" value="Partnership">Partnership</option>
-                                        <option className="bg-salon-bg" value="Feedback">Feedback</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-[9px] uppercase tracking-[2px] text-gold/60">Your Message</label>
-                                <textarea 
-                                    name="message"
-                                    required
-                                    rows={4}
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    className="w-full bg-transparent border-b border-white/10 py-3 text-[13px] focus:border-gold outline-none transition-colors resize-none"
-                                    placeholder="Tell us about your beauty goals..."
+                    <ScrollReveal className="relative group">
+                        <div className="relative h-full min-h-[550px] flex flex-col items-center justify-center text-center p-10 border border-gold/15 bg-[#0a0a0a] overflow-hidden">
+                            {/* Background Image with subtle zoom & luxury filter */}
+                            <div className="absolute inset-0 z-0">
+                                <img 
+                                    src="/saloon/assets/images/model_female_1.png" 
+                                    alt="Beauty & Elegance" 
+                                    className="w-full h-full object-cover opacity-25 grayscale group-hover:grayscale-0 transition-all duration-[2000ms] group-hover:scale-110"
                                 />
+                                <div className="absolute inset-0 bg-gradient-to-t from-salon-bg via-transparent to-salon-bg" />
+                                <div className="absolute inset-0 bg-gold/5" />
                             </div>
 
-                            <button 
-                                type="submit"
-                                disabled={submitting}
-                                className="relative group overflow-hidden w-full sm:w-auto px-12 py-4 bg-gold text-black uppercase tracking-[4px] text-[10px] font-bold transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50"
-                            >
-                                <span className="relative z-10">{submitting ? "Sending..." : "Submit Inquiry"}</span>
-                                <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-[450ms]" />
-                            </button>
+                            {/* Quote Content */}
+                            <div className="relative z-10 max-w-[420px]">
+                                <span className="text-gold text-5xl mb-8 block font-playfair opacity-30 animate-pulse">"</span>
+                                <h2 className="font-playfair text-[32px] sm:text-[40px] text-white leading-tight mb-8">
+                                    Beauty begins the moment you decide to be <span className="text-gold">yourself.</span>
+                                </h2>
+                                <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-gold/50 to-transparent mx-auto mb-8" />
+                                <p className="text-[10px] tracking-[5px] uppercase text-gold/60 font-medium">
+                                    Coco Chanel
+                                </p>
+                            </div>
 
-                            {sent && (
-                                <p className="text-gold text-[11px] italic animate-pulse">Thank you. Your message has been sent to our concierge.</p>
-                            )}
-                        </form>
+                            {/* Decorative Corners */}
+                            <div className="absolute top-6 left-6 w-8 h-8 border-t border-l border-gold/20" />
+                            <div className="absolute bottom-6 right-6 w-8 h-8 border-b border-r border-gold/20" />
+                        </div>
                     </ScrollReveal>
 
                     {/* Right Side: Contact Info & Map */}
@@ -179,10 +93,20 @@ export default function ContactPage() {
                             <div className="space-y-4">
                                 <span className="text-gold text-2xl">✧</span>
                                 <h3 className="text-[10px] uppercase tracking-[3px] font-bold">Social Connection</h3>
-                                <p className="text-salon-gray text-[13px] leading-relaxed italic opacity-70">
-                                    Instagram: @nyshabeautylounge <br />
-                                    WhatsApp: +971 50 XXX XXXX
-                                </p>
+                                <div className="flex flex-col gap-2.5">
+                                    <a href="https://www.instagram.com/nysha_beauty_lounge?igsh=MWFqMGJ1dGZibXg2MA%3D%3D" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors text-[13px] italic opacity-70 no-underline">
+                                        Instagram: @nysha_beauty_lounge
+                                    </a>
+                                    <a href="https://www.facebook.com/share/18DcSzK2VK/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors text-[13px] italic opacity-70 no-underline">
+                                        Facebook: Nysha Beauty Lounge
+                                    </a>
+                                    <a href="https://wa.me/971522038065" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors text-[13px] italic opacity-70 no-underline">
+                                        WhatsApp: +971 52 203 8065
+                                    </a>
+                                    <a href="https://snapchat.com/t/I9dMkeni" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors text-[13px] italic opacity-70 no-underline">
+                                        Snapchat: Nysha Lounge
+                                    </a>
+                                </div>
                             </div>
                         </div>
 

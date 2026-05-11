@@ -29,7 +29,9 @@ export default function Hero() {
                 </div>
 
                 <h1 className="font-playfair text-[clamp(52px,8vw,104px)] font-normal leading-[1.02] tracking-[-1px] mb-[22px] opacity-0 animate-[fadeUp_0.9s_0.6s_forwards] text-white">
-                    Luxury<br /><em className="italic text-gold not-italic">Beauty</em><br />Redefined
+                    Luxury<br />
+                    <span className="italic text-gold inline-block transform -rotate-[3deg] scale-[1.05] relative left-[-0.02em]">Beauty</span>
+                    <br />Redefined
                 </h1>
 
                 <p className="text-[11px] tracking-[8px] text-[rgba(245,240,232,0.38)] uppercase mb-[54px] opacity-0 animate-[fadeUp_0.9s_0.9s_forwards]">

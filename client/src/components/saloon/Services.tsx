@@ -101,16 +101,16 @@ export default function Services() {
     const displayServices =
         categories.length > 0
             ? categories.map((cat, idx) => ({
-                  id: `0${idx + 1}`.slice(-2),
-                  category: mapLabel(cat.name),
-                  name: cat.name,
-                  description: cat.description,
-                  image: cat.photo.startsWith("http")
-                      ? cat.photo
-                      : `${process.env.NEXT_PUBLIC_API_BASE_URL}${cat.photo}`,
-                  link: `/services?category=${slugify(cat.name)}`,
-                  transitionDelay: `${(idx % 4) * 0.15}s`,
-              }))
+                id: `0${idx + 1}`.slice(-2),
+                category: mapLabel(cat.name),
+                name: cat.name,
+                description: cat.description,
+                image: cat.photo.startsWith("http")
+                    ? cat.photo
+                    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${cat.photo}`,
+                link: `/services?category=${slugify(cat.name)}`,
+                transitionDelay: `${(idx % 4) * 0.15}s`,
+            }))
             : defaultServices;
 
     return (
@@ -144,7 +144,7 @@ export default function Services() {
                         className="group relative h-full flex-shrink-0 w-[82vw] sm:w-auto snap-center"
                     >
                         <div className="relative h-full overflow-hidden bg-[#181818] border border-white/5 transition-all duration-[0.45s] hover:border-gold/45 sm:hover:-translate-y-[9px] sm:hover:shadow-[0_24px_60px_rgba(0,0,0,0.55),0_0_0_1px_rgba(201,168,76,0.1)]">
-                            
+
                             {/* CARD CLICK = GO TO PAGE */}
                             <Link
                                 href={svc.link}

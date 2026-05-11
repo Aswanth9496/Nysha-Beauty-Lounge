@@ -116,9 +116,9 @@ export default function Header() {
                     {/* Contact Link (Desktop Only) */}
                     <Link
                         href="/contact"
-                        className="hidden lg:flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-salon-gray hover:text-gold transition-colors no-underline"
+                        className="hidden lg:flex items-center gap-2 text-[11px] tracking-[2.5px] uppercase text-gold hover:text-gold2 transition-colors no-underline"
                     >
-                        Contact
+                        Contact Us
                     </Link>
 
                     {/* Services Link with Dropdown (Desktop Only) */}
@@ -128,8 +128,8 @@ export default function Header() {
                         onMouseLeave={() => setIsDropdownOpen(false)}
                     >
                         <Link
-                            href="/services"
-                            className="flex items-center font-dm-sans text-[11px] font-light tracking-[2.5px] uppercase text-salon-gray hover:text-gold transition-colors no-underline whitespace-nowrap"
+                            href=""
+                            className="flex items-center font-dm-sans text-[11px] font-light tracking-[2.5px] uppercase text-gold hover:text-gold2 transition-colors no-underline whitespace-nowrap"
                         >
                             Services
                             <svg className={`ml-1.5 w-2.5 h-2.5 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -144,7 +144,7 @@ export default function Header() {
                                     <Link
                                         key={cat._id}
                                         href={`/services?category=${slugify(cat.name)}`}
-                                        className="block px-6 py-2.5 text-[9px] tracking-[2.5px] uppercase text-salon-gray hover:text-gold hover:bg-white/5 transition-all"
+                                        className="block px-6 py-2.5 text-[9px] tracking-[2.5px] uppercase text-gold hover:text-white hover:bg-white/5 transition-all"
                                         onClick={() => setIsDropdownOpen(false)}
                                     >
                                         {cat.name}
@@ -210,14 +210,14 @@ export default function Header() {
                     <Link
                         href="/"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="font-dm-sans text-[16px] tracking-[4px] uppercase text-white hover:text-gold transition-colors no-underline"
+                        className="font-dm-sans text-[16px] tracking-[4px] uppercase text-gold hover:text-gold2 transition-colors no-underline"
                     >
                         Home
                     </Link>
                     <Link
                         href="/services"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="font-dm-sans text-[16px] tracking-[4px] uppercase text-white hover:text-gold transition-colors no-underline"
+                        className="font-dm-sans text-[16px] tracking-[4px] uppercase text-gold hover:text-gold2 transition-colors no-underline"
                     >
                         Services
                     </Link>
@@ -229,7 +229,7 @@ export default function Header() {
                                 key={cat._id}
                                 href={`/services?category=${slugify(cat.name)}`}
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="font-dm-sans text-[11px] tracking-[3px] uppercase text-salon-gray hover:text-gold transition-colors no-underline"
+                                className="font-dm-sans text-[11px] tracking-[3px] uppercase text-gold hover:text-white transition-colors no-underline"
                             >
                                 {cat.name}
                             </Link>
@@ -238,7 +238,7 @@ export default function Header() {
                     <Link
                         href="/contact"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="font-dm-sans text-[16px] tracking-[4px] uppercase text-white hover:text-gold transition-colors no-underline"
+                        className="font-dm-sans text-[16px] tracking-[4px] uppercase text-gold hover:text-gold2 transition-colors no-underline"
                     >
                         Contact
                     </Link>

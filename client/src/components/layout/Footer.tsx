@@ -93,28 +93,34 @@ export default function Footer() {
 
                     {/* Social Media Links */}
                     <div className="flex items-center gap-4.5 mt-5.5">
-                        <a href="#" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="Instagram">
-                            <svg className="w-[15px] h-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <a href="https://www.instagram.com/nysha_beauty_lounge?igsh=MWFqMGJ1dGZibXg2MA%3D%3D" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="Instagram">
+                            <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                             </svg>
                         </a>
-                        <a href="#" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="Facebook">
-                            <svg className="w-[15px] h-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <a href="https://www.facebook.com/share/18DcSzK2VK/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="Facebook">
+                            <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                             </svg>
                         </a>
-                        <a href="https://wa.me/97145709468" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="WhatsApp">
-                            <svg className="w-[15px] h-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <a href="https://wa.me/971522038065" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="WhatsApp">
+                            <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
                             </svg>
                         </a>
-                        <a href="#" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="LinkedIn">
-                            <svg className="w-[15px] h-[15px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                                <rect x="2" y="9" width="4" height="12"></rect>
-                                <circle cx="4" cy="4" r="2"></circle>
+                        <a href="https://share.google/dYUCAHGBc7FywOnZ9" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="Google">
+                            <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                                <path d="M12 12h8.5"></path>
+                                <path d="M12 12c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5c1.8 0 3.3.9 4.2 2.3"></path>
+                                <path d="M12 12c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5c0-1.8-.9-3.3-2.3-4.2"></path>
+                            </svg>
+                        </a>
+                        <a href="https://snapchat.com/t/I9dMkeni" target="_blank" rel="noopener noreferrer" className="text-salon-gray hover:text-gold transition-colors duration-300 hover:-translate-y-0.5 transform" aria-label="Snapchat">
+                            <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 3c-2 0-3.5 1.5-3.5 3.5 0 2 1.5 3 1.5 4.5 0 1-.5 1.5-1.5 1.5s-2-.5-2-1.5-.5-1-1.5-1-1.5 1-1.5 2.5 1.5 3.5 4 4.5c0 1 .5 1.5 1.5 1.5h9c1 0 1.5-.5 1.5-1.5 2.5-1 4-3 4-4.5s-.5-2.5-1.5-2.5-1.5.5-1.5 1 1.5 1.5 2.5 1.5 1.5-.5 1.5-1.5-.5-2.5-1.5-4.5C15.5 4.5 14 3 12 3z" />
                             </svg>
                         </a>
                     </div>
