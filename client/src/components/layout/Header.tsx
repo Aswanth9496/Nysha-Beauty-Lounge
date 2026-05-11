@@ -80,8 +80,8 @@ export default function Header() {
             <header
                 className={`fixed top-0 left-0 right-0 z-[1000] flex items-center justify-between transition-all duration-400 ease
                 ${isSolid
-                        ? "bg-salon-bg/94 backdrop-blur-[22px] h-[72px] sm:h-[92px] px-4 sm:px-14 border-b border-salon-border"
-                        : "bg-gradient-to-b from-black/55 to-transparent h-[82px] sm:h-[110px] px-4 sm:px-14"
+                        ? "bg-salon-bg/94 backdrop-blur-[22px] h-[90px] sm:h-[130px] px-4 sm:px-14 border-b border-salon-border"
+                        : "bg-gradient-to-b from-black/55 to-transparent h-[100px] sm:h-[150px] px-4 sm:px-14"
                     }`}
             >
                 {/* Logo */}
@@ -93,7 +93,7 @@ export default function Header() {
                         <img
                             src={logoUrl}
                             alt="Nysha Beauty Lounge"
-                            className="h-[80%] sm:h-[82%] max-w-[1st explain to me 0px] sm:max-w-none w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                            className="h-[100%] sm:h-[100%] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex flex-col justify-center h-full">
