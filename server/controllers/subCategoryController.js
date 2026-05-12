@@ -111,7 +111,7 @@ exports.editSubCategory = async (req, res) => {
 exports.deleteSubCategory = async (req, res) => {
   try {
     await subCategoryService.deleteSubCategory(req.params.id);
-    res.status(200).json({ success: true, message: 'Sub-Category softly deleted' });
+    res.status(200).json({ success: true, message: 'Sub-Category permanently deleted' });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }

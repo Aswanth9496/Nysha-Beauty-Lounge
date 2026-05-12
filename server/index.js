@@ -32,7 +32,7 @@ app.use(hpp()); // Prevent HTTP Parameter Pollution
 
 
 
-const allowedOrigins = [];
+const allowedOrigins = ["http://localhost:3000"];
 
 if (process.env.FRONTEND_URL) {
   // Can handle comma-separated URLs if needed

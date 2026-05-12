@@ -250,8 +250,9 @@ export default function ServicesPage() {
         }
     };
 
-    const getSubCategoryName = (sub: SubCategory | string) => {
-        if (typeof sub === 'object') return sub.name;
+    const getSubCategoryName = (sub: SubCategory | string | null) => {
+        if (!sub) return 'Missing Sub-Category';
+        if (typeof sub === 'object' && sub !== null) return sub.name;
         const found = subCategories.find(s => s._id === sub);
         return found ? found.name : 'Unknown';
     };

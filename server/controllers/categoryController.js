@@ -91,7 +91,7 @@ exports.editCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
   try {
     await categoryService.deleteCategory(req.params.id);
-    res.status(200).json({ success: true, message: 'Category softly deleted' });
+    res.status(200).json({ success: true, message: 'Category permanently deleted' });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }

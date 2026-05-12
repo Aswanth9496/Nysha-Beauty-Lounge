@@ -27,11 +27,6 @@ const categorySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-    select: false // Hides isDeleted from query results by default
-  }
 }, { timestamps: true });
 
 const Category = mongoose.model('Category', categorySchema);

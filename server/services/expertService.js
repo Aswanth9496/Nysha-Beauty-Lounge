@@ -9,11 +9,11 @@ const addExpert = async (data) => {
 };
 
 const getExperts = async (filter = {}) => {
-  return await Expert.find({ isDeleted: false, ...filter }).sort({ sort_order: 1, createdAt: -1 });
+  return await Expert.find(filter).sort({ sort_order: 1, createdAt: -1 });
 };
 
 const getExpertById = async (id) => {
-  const expert = await Expert.findById(id).where({ isDeleted: false });
+  const expert = await Expert.findById(id);
   if (!expert) {
     throw new Error('Expert not found');
   }
@@ -22,7 +22,7 @@ const getExpertById = async (id) => {
 
 const editExpert = async (id, data) => {
   const expert = await Expert.findById(id);
-  if (!expert || expert.isDeleted) {
+  if (!expert) {
     throw new Error('Expert not found');
   }
 
@@ -44,12 +44,23 @@ const editExpert = async (id, data) => {
 
 const deleteExpert = async (id) => {
   const expert = await Expert.findById(id);
-  if (!expert || expert.isDeleted) {
+  if (!expert) {
     throw new Error('Expert not found');
   }
 
-  expert.isDeleted = true;
-  await expert.save();
+  // Delete image if exists
+  if (expert.image) {
+    const imagePath = path.join(__dirname, '..', expert.image);
+    if (fs.existsSync(imagePath)) {
+      try {
+        fs.unlinkSync(imagePath);
+      } catch (err) {
+        console.error('Failed to delete expert image:', err);
+      }
+    }
+  }
+
+  await Expert.findByIdAndDelete(id);
 };
 
 module.exports = {

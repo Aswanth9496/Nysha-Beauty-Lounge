@@ -42,11 +42,6 @@ const expertSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-    select: false // Hides isDeleted from query results by default
-  }
 }, { timestamps: true });
 
 const Expert = mongoose.model('Expert', expertSchema);

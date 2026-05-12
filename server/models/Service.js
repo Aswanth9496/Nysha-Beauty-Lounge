@@ -7,7 +7,7 @@ const variantSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   description_1: { type: String },
   description_2: { type: String },
-  duration: { type: String }, 
+  duration: { type: String },
   is_visible: { type: Boolean, default: true },
   sort_order: { type: Number, default: 0 }
 });
@@ -70,7 +70,7 @@ const serviceSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false,
-    select: false 
+    select: false
   }
 }, { timestamps: true });
 

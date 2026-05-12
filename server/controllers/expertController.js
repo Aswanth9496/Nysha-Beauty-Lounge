@@ -97,7 +97,7 @@ exports.editExpert = async (req, res) => {
 exports.deleteExpert = async (req, res) => {
   try {
     await expertService.deleteExpert(req.params.id);
-    res.status(200).json({ success: true, message: 'Expert softly deleted' });
+    res.status(200).json({ success: true, message: 'Expert permanently deleted' });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }

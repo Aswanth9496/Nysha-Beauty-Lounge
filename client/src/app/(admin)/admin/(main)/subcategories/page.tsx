@@ -187,8 +187,9 @@ export default function SubCategoriesPage() {
         }
     };
 
-    const getCategoryName = (cat: Category | string) => {
-        if (typeof cat === 'object') return cat.name;
+    const getCategoryName = (cat: Category | string | null) => {
+        if (!cat) return 'Missing Category';
+        if (typeof cat === 'object' && cat !== null) return cat.name;
         const found = categories.find(c => c._id === cat);
         return found ? found.name : 'Unknown';
     };

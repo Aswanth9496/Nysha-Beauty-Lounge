@@ -115,7 +115,7 @@ exports.editService = async (req, res) => {
 exports.deleteService = async (req, res) => {
   try {
     await serviceCore.deleteService(req.params.id);
-    res.status(200).json({ success: true, message: 'Service softly deleted' });
+    res.status(200).json({ success: true, message: 'Service permanently deleted' });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }

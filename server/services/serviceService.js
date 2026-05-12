@@ -35,7 +35,7 @@ exports.editService = async (id, data) => {
     new: true,
     runValidators: true
   });
-  
+
   if (!service || service.isDeleted) {
     throw new Error('Service not found');
   }
